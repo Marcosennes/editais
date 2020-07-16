@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use Prettus\Validator\Contracts\ValidatorInterface;
-use Prettus\Validator\Exceptions\ValidatorException;
-use App\Http\Requests\EditalCreateRequest;
-use App\Http\Requests\EditalUpdateRequest;
+use App\Entities\Edital;
+use App\Http\Requests\editalCreateRequest;
 use App\Repositories\EditalRepository;
 use App\Services\EditalService;
+use Illuminate\Http\Request;
 
 
 class EditalsController extends Controller
 {
-
     protected $repository;
     protected $service;
 
@@ -31,13 +26,15 @@ class EditalsController extends Controller
         return view('edital.index');
     }
 
-
-    public function salvar(EditalCreateRequest $request)
+    public function salvar(editalCreateRequest $request)
     {
-        dd($request);
+        $resposta = $this->service->salvar($request);
 
-        $request = $this->service->salvar($request->all());
+        session()->flash('cadastro',[
+            'mensagem'  => $resposta['mensagem'],
+            'validacao' => $resposta['validacao'],
+        ]);
 
-        return redirect()->route('user.index');
+        return redirect()->route('edital.index');
     }
 }

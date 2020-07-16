@@ -2,12 +2,13 @@
 
 namespace App\Entities;
 
-use Illuminate\Foundation\Auth\EditalTipo as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
-class EditalTipo extends Authenticatable
+use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
+    
+class EditalTipo extends Model implements Transformable
 {
-    use Notifiable;
+    use TransformableTrait;
 
     protected $table = 'edital_tipos';
     protected $fillable = [

@@ -20,12 +20,10 @@
     
 </head>
 <body>
-
 <div class="offset-lg-2 col-12 col-md-12 col-lg-8" style="background-color: white">
     <div class="container">
         <div class="offset-2 col-8">
             <div class="row d-flex flex-column">
-                
                 <form method="post" action="{{ route('edital.salvar') }}" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                     <h3 style="margin-top: 20px;">Cadastrar edital</h3>
@@ -35,12 +33,12 @@
                             <option value="2">SOMAR</option>            
                         </select>
                     <label style="margin-top: 10px;" for="edital">Nome do edital</label>
-                        <input type="text" class="form-control" name="name">
+                        <input type="text" class="form-control" name="nome">
                     <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
                         <input type="file" name="arquivo" id="arquivo">
                         <br>
                     <label style="margin-top: 10px;" for="tipo">Tipo</label>
-                        <select name="tipo" class="form-control">
+                        <select name="tipo_id" class="form-control">
                             <option value="1">Pregão Presencial</option>            
                             <option value="2">Convite</option>            
                             <option value="3">Concorrência Pública</option>            
@@ -54,6 +52,18 @@
                     -->
                     <button class="btn btn-1" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
                 </form>    
+                @if (session('cadastro'))
+                    @if(session('cadastro')['validacao'] == true)
+                        <div class="alert alert-success" role="alert">
+                          {{ session('cadastro')['mensagem'] }}
+                        </div>
+                    @endif
+                    @if(session('cadastro')['validacao'] == false)
+                        <div class="alert alert-danger" role="alert">
+                          {{ session('cadastro')['mensagem'] }}
+                        </div>
+                    @endif
+                @endif
                 <form method="post" action="" enctype="multipart/form-data">
                     <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                     <div id="anexo" style="display: show;">

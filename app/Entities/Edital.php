@@ -2,13 +2,14 @@
 
 namespace App\Entities;
 
-use Illuminate\Foundation\Auth\Edital as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\EditalFilho;
-use Illuminate\Notifications\Notifiable;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
-class Edital extends Authenticatable
+class Edital extends Model implements Transformable
 {
-    use Notifiable;
+    use TransformableTrait;
 
     protected $table = 'editals';
     protected $fillable = [

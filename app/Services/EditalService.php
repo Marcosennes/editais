@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Edital;
 use App\Repositories\EditalRepository;
 use App\Validators\EditalValidator;
 use Exception;
@@ -19,57 +20,76 @@ class EditalService{
         $this->validator = $validator;
     }
 
+    public function formata($palavra){
+
+        $str = $palavra;
+        $str = strtolower(utf8_decode($str)); $i=1;
+        $str = strtr($str, utf8_decode('àáâãäåæçèéêëìíîïñòóôõöøùúûýýÿ'), 'aaaaaaaceeeeiiiinoooooouuuyyy');
+        $str = preg_replace("/([^a-z0-9])/",'-',utf8_encode($str));
+        while($i>0) $str = str_replace('--','-',$str,$i);
+        if (substr($str, -1) == '-') $str = substr($str, 0, -1);
+
+        return $str;
+    }
+
     public function salvar($data)
     {
-        $aux_data =  
-        [
-            'nome'          => $data['nome'],
-            'arquivo'      => $data['arquivo'],
-            'ano'           => $data['ano'],
-            'instituicao'   => $data['instituicao'],
-            'tipo'          => $data['tipo'],
-        ];
-
-
-       /*
-        * Dessa forma se a busca retornar sem nenhum usuário com o mesmo email, o resultado não é null
-        * 
-        * $email_verification = DB::table('users')
-        *       ->where('email', '=', $data['email'])
-        *       ->select('id')
-        *       ->get();
-        */
-
-        $email_verification = $this->repository->findWhere(['email' => $data['email']])->first();
-        $cpf_verification   = $this->repository->findWhere(['cpf'   => $data['cpf']])->first();
+        $fileName = $this->formata($data['nome']) . '.pdf';
 
         try
         {
-            if($email_verification)
+            if($data->file('arquivo')->isValid())
             {
-                return 
-                [
-                    'messages'              => "Email já cadastrado no sistema",
-                    'confirm_validation'    => false,
-                ];
-            }
-            else if($cpf_verification)
-            {
-                return 
-                [
-                    'messages'              => "CPF já cadastrado no sistema",
-                    'confirm_validation'    => false,
-                ];
-            }
-            else
-            {
-                $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
-                $usuario = $this->repository->create($aux_data);
+                if($data->file('arquivo')->extension() == 'pdf')
+                {
+                    $fileName_verification = $this->repository->findWhere(['arquivo' => $fileName])->first();
+
+                    if($fileName_verification){                                //Existe algum arquivo com o mesmo nome
+                        
+                        return
+                        [
+                            'mensagem'  => "Já existe arquivo com esse nome. Mude o nome do edital.",
+                            'validacao' => false,
+                        ];                
+                    }else                                                       //Não existe um arquivo com esse nome no banco
+                    {
+
+                        $data->file('arquivo')->storeAs('editais', $fileName);
     
-                return 
+                        $aux_data =  
+                        [
+                            'nome'          => $data['nome'],
+                            'arquivo'       => $fileName,
+                            'ano'           => $data['ano'],
+                            'instituicao'   => $data['instituicao'],
+                            'tipo_id'       => $data['tipo_id'],
+                        ];
+    
+                        $this->validator->with($aux_data)->passesOrFail(ValidatorInterface::RULE_CREATE);
+                        $this->repository->create($aux_data);
+            
+                        return 
+                        [
+                            'mensagem'  => "Edital cadastrado",
+                            'validacao' => true,
+                        ];
+                    }
+                }
+                else
+                {
+                    return
+                    [
+                        'mensagem'  => "Só é aceito arquivo no formato PDF",
+                        'validacao' => false,
+                    ];
+                }
+                
+            }else
+            {
+                return
                 [
-                    'messages'              => "Usuário cadastrado",
-                    'confirm_validation'    => true,
+                    'mensagem'  => "Problema ao enviar arquivo",
+                    'validacao' => false,
                 ];
             }
         }

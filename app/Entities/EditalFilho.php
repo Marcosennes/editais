@@ -2,14 +2,16 @@
 
 namespace App\Entities;
 
-use Illuminate\Foundation\Auth\Edital as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
-class Edital extends Authenticatable
+class EditalFilho extends Model implements Transformable
 {
-    use Notifiable;
+    use TransformableTrait;
 
-    protected $table = 'editals';
+    protected $table = 'edital_filhos';
+
     protected $fillable = [
         'id',
         'nome',
@@ -21,7 +23,7 @@ class Edital extends Authenticatable
         
     ];
 
-    public function edital(){     //No singular pois o produto pertence a uma instituição
+    public function edital(){     //No singular
 
         return $this->belongsTo(Edital::class);   //belong = pertence
 
