@@ -22,8 +22,17 @@ class EditalsController extends Controller
 
     public function index()
     {
+        $anos = array('2015', '2016', '2017', '2018', '2019', '2020');
+        return view('edital.index',[
+            'anos' => $anos,
+        ]);
+    }
 
-        return view('edital.index');
+    public function cadastrar()
+    {
+        $editais      = $this->repository->all();
+
+        return view('edital.cadastrar');
     }
 
     public function salvar(editalCreateRequest $request)
@@ -35,6 +44,6 @@ class EditalsController extends Controller
             'validacao' => $resposta['validacao'],
         ]);
 
-        return redirect()->route('edital.index');
+        return redirect()->route('edital.cadastrar');
     }
 }
