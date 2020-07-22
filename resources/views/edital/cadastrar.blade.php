@@ -31,7 +31,7 @@
                     <label for="anexo">O edital possui anexo?</label>
                     <a id="adicionar_anexo" class="btn btn-1">Anexar arquivo neste edital</a>
                     -->
-                    <button class="btn btn-1" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
                 </form>    
                 @if (session('cadastro'))
                     @if(session('cadastro')['validacao'] == true)
@@ -45,341 +45,61 @@
                         </div>
                     @endif
                 @endif
+
+                <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
+                <form method="post" action="{{ route('editais.filtrarPorTipoAnexo') }}">
+                    {{ csrf_field() }}
+                    <label for="instituicao">Instituição</label>
+                    <select name="instituicao" class="form-control">
+                        <option value="1">Prefeitura de Maricá</option>            
+                        <option value="2">SOMAR</option>            
+                    </select>
+                    <label for="ano">Ano</label>
+                    <select name="ano" class="form-control">
+                        @foreach ($anos as $ano)
+                            <option value="{{ $ano->ano }}">{{ $ano->ano }}</option>            
+                        @endforeach
+                    </select>
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" class="form-control">
+                        @foreach ($tipos as $tipo)
+                            <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>            
+                        @endforeach
+                    </select>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Filtrar</button>
+                </form>
                 <form method="post" action="" enctype="multipart/form-data">
-                    <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                     <div id="anexo" style="display: show;">
-                        <label for="instituicao">Instituição</label>
-                            <select name="instituicao" class="form-control">
-                                <option value="1">Prefeitura de Maricá</option>            
-                                <option value="2">SOMAR</option>            
-                            </select>
                         <div class="table-overflow" style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                            <table class="table table-sm table-striped table-bordered table-hover" style="background-color: white">
-                                <thead>
-                                  <tr>
-                                    <th scope="col">Nome do edital</th>
-                                    <th scope="col">Ano</th>
-                                    <th scope="col">Selecione</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital_pai" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td scope="row">Pregão Presencial 02</td>
-                                    <td>2019</td>
-                                    <td>
-                                        <input type="radio" name="edital" value="id"><br>                                        </div>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
+                            @if (isset($editaisFiltrados))
+                                <table class="table table-sm table-striped table-bordered table-hover" style="background-color: white">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Nome do edital</th>
+                                        <th scope="col">Ano</th>
+                                        <th scope="col">Selecione</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($editaisFiltrados as $edital)
+                                            <tr>
+                                                <td scope="row">{{ $edital->nome }}</td>
+                                                <td>{{ $edital->ano }}</td>
+                                                <td>
+                                                    <input type="radio" name="edital_pai" value="id"><br>                                        
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            @endif
                         </div>
                         <label style="margin-top: 10px;" for="edital">Nome do anexo</label>
                             <input type="text" class="form-control" name="name">
                         <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
                             <input type="file" name="arquivo" id="arquivo">    
                             <br>
-                        <button class="btn btn-1" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Cadastrar</button>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Cadastrar</button>
                     </div>
                 </form>
             </div>
@@ -402,13 +122,15 @@ function onlynumber(evt) {
 }
 </script>
 
-<script>
-        $(document).ready(function()
-        {
-            $("#adicionar_anexo").click(function()
+@section('js')
+    <script>
+            $(document).ready(function()
             {
-                $('#adicionar_anexo').hide();
-                $("#anexo").show();
+                $("#adicionar_anexo").click(function()
+                {
+                    $('#adicionar_anexo').hide();
+                    $("#anexo").show();
+                })
             })
-        })
     </script>
+@endsection

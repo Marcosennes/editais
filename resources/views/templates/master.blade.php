@@ -8,13 +8,13 @@
     <!-- Importando o Font Awesome -->
     <script src="https://kit.fontawesome.com/a65264833f.js" crossorigin="anonymous"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap -->
     <link href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
  
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One">
     <link rel="stylesheet" href="{{ asset('css/stylesheet.css') }}">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <title>Investindo</title>   
     
@@ -25,5 +25,8 @@
         @yield('conteudo-view')
     </section>
 </body>
+
+@yield('js')
+
 </html>
     

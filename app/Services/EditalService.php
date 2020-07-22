@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entities\Edital;
+use App\Entities\EditalTipo;
 use App\Repositories\EditalRepository;
 use App\Validators\EditalValidator;
 use Exception;
@@ -102,6 +103,44 @@ class EditalService{
                 default                        : return ['success' => false, 'messages' => get_class($e)];
             }
         }
+    }
+
+    public function ordenaAno()
+    {
+        $anos = Edital::select('ano')
+        ->groupBy('ano')
+        ->orderBy('ano', 'asc')
+        ->get();
+
+        return $anos;
+    }
+
+    public function tipos()
+    {
+        $tipos = EditalTipo::select('id','nome')
+        ->get();
+        
+        return $tipos;
+    }
+
+    public function filtraPorAno($ano)
+    {
+        $editaisFiltrados = Edital::where('ano','=',$ano)
+                                    ->where('tipo_id','=',1)
+                                    ->select('*')
+                                    ->get();
+
+        return $editaisFiltrados;
+    }
+
+    public function filtraPorTipo($ano_selecionado, $tipo)
+    {
+        $editaisFiltrados = Edital::where('tipo_id','=',$tipo)
+                                    ->where('ano','=',$ano_selecionado)
+                                    ->select('*')
+                                    ->get();
+
+        return $editaisFiltrados;
     }
 
     public function update($data, $id)
