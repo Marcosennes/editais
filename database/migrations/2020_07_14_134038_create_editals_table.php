@@ -20,7 +20,6 @@ class CreateEditalsTable extends Migration
 			$table->string('nome', 80);
 			$table->string('arquivo', 80);
 			$table->char('ano', 4);
-			$table->string('instituicao', 40);
 
 			$table->timestamps();
 			

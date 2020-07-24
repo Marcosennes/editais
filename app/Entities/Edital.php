@@ -18,7 +18,7 @@ class Edital extends Model implements Transformable
         'arquivo',
         'ano',
         'tipo_id',
-        'instituicao',
+        'instituicao_id',
     ];
 
     protected $hidden = [
@@ -31,6 +31,12 @@ class Edital extends Model implements Transformable
 
     }
 
+    public function instituicao(){     //No singular pois o produto pertence a uma instituição
+
+        return $this->belongsTo(Instituicao::class);   //belong = pertence
+
+    }
+    
 
     public function editalFilhos(){
 

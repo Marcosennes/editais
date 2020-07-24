@@ -26,6 +26,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\EditalRepository::class, \App\Repositories\EditalRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\EditalTipoRepository::class, \App\Repositories\EditalTipoRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\EditalFilhoRepository::class, \App\Repositories\EditalFilhoRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\InstituicaoRepository::class, \App\Repositories\InstituicaoRepositoryEloquent::class);
         //:end-bindings:
     }
 }

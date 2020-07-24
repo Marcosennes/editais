@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entities\Edital;
 use App\Entities\EditalTipo;
+use App\Entities\Instituicao;
 use App\Repositories\EditalRepository;
 use App\Validators\EditalValidator;
 use Exception;
@@ -35,8 +36,8 @@ class EditalService{
 
     public function salvar($data)
     {
-        $fileName = $this->formata($data['nome']) . '.pdf';
-
+        $fileName = $this->formata($data['nome']) . '_' . $data['ano'] .'.pdf';
+        
         try
         {
             if($data->file('arquivo')->isValid())
@@ -44,7 +45,7 @@ class EditalService{
                 if($data->file('arquivo')->extension() == 'pdf')
                 {
                     $fileName_verification = $this->repository->findWhere(['arquivo' => $fileName])->first();
-
+                    
                     if($fileName_verification){                                //Existe algum arquivo com o mesmo nome
                         
                         return
@@ -54,18 +55,18 @@ class EditalService{
                         ];                
                     }else                                                       //Não existe um arquivo com esse nome no banco
                     {
-
-                        $data->file('arquivo')->storeAs('editais', $fileName);
-    
+                        
+                        $data->file('arquivo')->storeAs('editais', $fileName);  //Salvo o arquivo
+                        
                         $aux_data =  
                         [
-                            'nome'          => $data['nome'],
-                            'arquivo'       => $fileName,
-                            'ano'           => $data['ano'],
-                            'instituicao'   => $data['instituicao'],
-                            'tipo_id'       => $data['tipo_id'],
+                            'nome'              => $data['nome'],
+                            'arquivo'           => $fileName,
+                            'ano'               => $data['ano'],
+                            'tipo_id'           => $data['tipo_id'],
+                            'instituicao_id'    => $data['instituicao_id'],
                         ];
-    
+                        
                         $this->validator->with($aux_data)->passesOrFail(ValidatorInterface::RULE_CREATE);
                         $this->repository->create($aux_data);
             
@@ -123,6 +124,14 @@ class EditalService{
         return $tipos;
     }
 
+    public function instituicoes()
+    {
+        $instituicoes = Instituicao::select('id','nome')
+        ->get();
+        
+        return $instituicoes;
+    }
+
     public function filtraPorAno($ano)
     {
         $editaisFiltrados = Edital::where('ano','=',$ano)
@@ -137,7 +146,18 @@ class EditalService{
     {
         $editaisFiltrados = Edital::where('tipo_id','=',$tipo)
                                     ->where('ano','=',$ano_selecionado)
-                                    ->select('*')
+                                    ->select('id', 'nome', 'ano')
+                                    ->get();
+
+        return $editaisFiltrados;
+    }
+
+    public function filtraPorTipoEInstituicao($instituicao_id,$ano_selecionado, $tipo)
+    {
+        $editaisFiltrados = Edital::where('tipo_id','=',$tipo)
+                                    ->where('ano','=',$ano_selecionado)
+                                    ->where('instituicao_id','=',$instituicao_id)
+                                    ->select('id', 'nome', 'ano')
                                     ->get();
 
         return $editaisFiltrados;

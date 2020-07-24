@@ -15,7 +15,7 @@ class EditalFilho extends Model implements Transformable
     protected $fillable = [
         'id',
         'nome',
-        'endereco',
+        'arquivo',
         'pai_id',
     ];
 

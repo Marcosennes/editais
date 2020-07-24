@@ -18,7 +18,7 @@ class CreateEditalFilhosTable extends Migration
 		Schema::create('edital_filhos', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('nome', 80);
-			$table->string('endereco', 80);
+			$table->string('arquivo', 80);
 			$table->unsignedInteger('pai_id');
 
 			$table->timestamps();

@@ -9,9 +9,10 @@
                     {!! csrf_field() !!}
                     <h3 style="margin-top: 20px;">Cadastrar edital</h3>
                     <label for="instituicao">Instituição</label>
-                        <select name="instituicao" class="form-control">
-                            <option value="1">Prefeitura de Maricá</option>            
-                            <option value="2">SOMAR</option>            
+                        <select name="instituicao_id" class="form-control">
+                            @foreach ($instituicoes as $instituicao)
+                                <option value="{{ $instituicao->id }}">{{ $instituicao->nome }}</option>                                            
+                            @endforeach          
                         </select>
                     <label style="margin-top: 10px;" for="edital">Nome do edital</label>
                         <input type="text" class="form-control" name="nome">
@@ -19,11 +20,10 @@
                         <input type="file" name="arquivo" id="arquivo">
                         <br>
                     <label style="margin-top: 10px;" for="tipo">Tipo</label>
-                        <select name="tipo_id" class="form-control">
-                            <option value="1">Pregão Presencial</option>            
-                            <option value="2">Convite</option>            
-                            <option value="3">Concorrência Pública</option>            
-                            <option value="4">Tomada de Preços</option>            
+                        <select name="tipo_id" class="form-control"> 
+                            @foreach ($tipos as $tipo)
+                                <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>                                            
+                            @endforeach                    
                         </select>
                     <label style="margin-top: 10px;" for="ano">Ano</label>
                         <input type="text" onkeypress="return onlynumber();" class="form-control" name="ano">
@@ -45,68 +45,69 @@
                         </div>
                     @endif
                 @endif
-
                 <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
-                <form method="post" action="{{ route('editais.filtrarPorTipoAnexo') }}">
+                <form name="formFiltraAnexo">
                     {{ csrf_field() }}
                     <label for="instituicao">Instituição</label>
-                    <select name="instituicao" class="form-control">
-                        <option value="1">Prefeitura de Maricá</option>            
-                        <option value="2">SOMAR</option>            
-                    </select>
+                        <select name="instituicao_id" class="form-control">
+                            @foreach ($instituicoes as $instituicao)
+                                <option value="{{ $instituicao->id }}">{{ $instituicao->nome }}</option>                                            
+                            @endforeach          
+                        </select>
                     <label for="ano">Ano</label>
-                    <select name="ano" class="form-control">
+                    <select name="ano" id="anexoAno" class="form-control">
                         @foreach ($anos as $ano)
                             <option value="{{ $ano->ano }}">{{ $ano->ano }}</option>            
                         @endforeach
                     </select>
                     <label for="tipo">Tipo</label>
-                    <select name="tipo" class="form-control">
+                    <select name="tipo" id="anexoTipo" class="form-control">
                         @foreach ($tipos as $tipo)
                             <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>            
                         @endforeach
                     </select>
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Filtrar</button>
                 </form>
-                <form method="post" action="" enctype="multipart/form-data">
-                    <div id="anexo" style="display: show;">
+                <form method="post" action="{{ route('editalAnexo.salvar') }}" enctype="multipart/form-data">
+                    {!! csrf_field() !!}
+                    <div class="d-none" id="anexoTable">
                         <div class="table-overflow" style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                            @if (isset($editaisFiltrados))
-                                <table class="table table-sm table-striped table-bordered table-hover" style="background-color: white">
-                                    <thead>
+                            <table id="tableAnexos" class="table table-sm table-striped table-bordered table-hover" style="background-color: white">
+                                <thead>
                                     <tr>
                                         <th scope="col">Nome do edital</th>
                                         <th scope="col">Ano</th>
                                         <th scope="col">Selecione</th>
                                     </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($editaisFiltrados as $edital)
-                                            <tr>
-                                                <td scope="row">{{ $edital->nome }}</td>
-                                                <td>{{ $edital->ano }}</td>
-                                                <td>
-                                                    <input type="radio" name="edital_pai" value="id"><br>                                        
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @endif
+                                </thead>
+                                <tbody id="bodyTable">
+                                </tbody>
+                            </table>
                         </div>
                         <label style="margin-top: 10px;" for="edital">Nome do anexo</label>
-                            <input type="text" class="form-control" name="name">
+                            <input type="text" class="form-control" name="nome">
                         <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
                             <input type="file" name="arquivo" id="arquivo">    
                             <br>
                         <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Cadastrar</button>
                     </div>
                 </form>
+                @if (session('cadastroAnexo'))
+                @if(session('cadastroAnexo')['validacao'] == true)
+                    <div class="alert alert-success" role="alert">
+                      {{ session('cadastroAnexo')['mensagem'] }}
+                    </div>
+                @endif
+                @if(session('cadastroAnexo')['validacao'] == false)
+                    <div class="alert alert-danger" role="alert">
+                      {{ session('cadastroAnexo')['mensagem'] }}
+                    </div>
+                @endif
+            @endif
             </div>
         </div>
     </div>
 </div>
-
 <script>
 
 function onlynumber(evt) {
@@ -123,14 +124,33 @@ function onlynumber(evt) {
 </script>
 
 @section('js')
-    <script>
-            $(document).ready(function()
-            {
-                $("#adicionar_anexo").click(function()
-                {
-                    $('#adicionar_anexo').hide();
-                    $("#anexo").show();
-                })
-            })
+    <script type="text/javascript">
+            $('form[name="formFiltraAnexo"]').submit(function(event){
+                event.preventDefault();
+
+                /*
+                var instituicao = $(this).find('#anexoInstituicao').val();
+                var ano         = $(this).find('#anexoAno').val();
+                var tipo        = $(this).find('#anexoTipo').val();
+                */
+
+                $.ajax({
+                    url: "{{ route('edital.filtrarPorTipoAnexo') }}",
+                    type: "post",
+                    data: $(this).serialize(),
+                    dataType: "json",
+                    success: function (response) {
+                        
+                        $('#anexoTable').removeClass('d-none');
+                        $('#bodyTable').remove();
+                        $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
+                        $.each(response, function(index, edital) {
+                            $('#bodyTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' + edital.ano + '</td><td><input type="radio" name="pai_id" value="' + edital.id + '"><br></td></tr>');
+                        });
+                        console.log(response);
+                    }
+                });
+
+            });
     </script>
 @endsection
