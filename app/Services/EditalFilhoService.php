@@ -10,6 +10,7 @@ use App\Validators\EditalFilhoValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
+use Prettus\Validator\Exceptions\ValidatorException;
 
 class EditalFilhoService{
     
@@ -44,7 +45,7 @@ class EditalFilhoService{
         
         try
         {
-            if($data->file('arquivo')->isValid())
+            if($data->file('arquivo') != null)
             {
                 if($data->file('arquivo')->extension() == 'pdf')
                 {
@@ -92,7 +93,7 @@ class EditalFilhoService{
             {
                 return
                 [
-                    'mensagem'  => "Problema ao enviar arquivo",
+                    'mensagem'  => "Campo do arquivo não pode ser vazio",
                     'validacao' => false,
                 ];
             }
@@ -101,9 +102,10 @@ class EditalFilhoService{
         {
             switch(get_class($e))
             {    
-                case QueryException::class     : return ['success' => false, 'messages' => $e->getMessage()];
-                case Exception::class          : return ['success' => false, 'messages' => $e->getMessage()];
-                default                        : return ['success' => false, 'messages' => get_class($e)];
+                case QueryException::class     : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                case ValidatorException::class : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                case Exception::class          : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                default                        : return     ['validacao' => false,     'mensagem' => get_class($e)];
             }
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entities\Edital;
+use App\Entities\EditalFilho;
 use App\Entities\EditalTipo;
 use App\Entities\Instituicao;
 use App\Repositories\EditalRepository;
@@ -10,6 +11,8 @@ use App\Validators\EditalValidator;
 use Exception;
 use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
+use Prettus\Validator\Exceptions\ValidatorException;
+
 
 class EditalService{
     
@@ -40,7 +43,7 @@ class EditalService{
         
         try
         {
-            if($data->file('arquivo')->isValid())
+            if($data->file('arquivo') != null)
             {
                 if($data->file('arquivo')->extension() == 'pdf')
                 {
@@ -90,7 +93,7 @@ class EditalService{
             {
                 return
                 [
-                    'mensagem'  => "Problema ao enviar arquivo",
+                    'mensagem'  => "Campo do arquivo não pode ser vazio",
                     'validacao' => false,
                 ];
             }
@@ -99,11 +102,55 @@ class EditalService{
         {
             switch(get_class($e))
             {    
-                case QueryException::class     : return ['success' => false, 'messages' => $e->getMessage()];
-                case Exception::class          : return ['success' => false, 'messages' => $e->getMessage()];
-                default                        : return ['success' => false, 'messages' => get_class($e)];
+                case QueryException::class     : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                case ValidatorException::class : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                case Exception::class          : return     ['validacao' => false,     'mensagem' => $e->getMessage()];
+                default                        : return     ['validacao' => false,     'mensagem' => get_class($e)];
             }
         }
+    }
+
+    public function anexos($instituicao_id, $ano, $tipo_id)
+    {
+        $anexos = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
+        ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
+        ->where('instituicao_id','=',$instituicao_id)
+        ->where('ano','=',$ano)
+        ->where('tipo_id','=',$tipo_id)
+        ->select('edital_filhos.id', 'edital_filhos.nome', 'pai_id')
+        ->get();
+
+        return $anexos;
+    }
+
+    public function editaisComAnexo($instituicao_id, $ano, $tipo_id)
+    {
+        $editais_com_anexo = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
+                                          ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
+                                          ->where('instituicao_id','=',$instituicao_id)
+                                          ->where('ano','=',$ano)
+                                          ->where('tipo_id','=',$tipo_id)
+                                          ->select('pai_id')
+                                          ->groupBy('pai_id')
+                                          ->orderBy('pai_id', 'asc')
+                                          ->get();
+
+        $editais_com_anexo_array = [];
+
+        for($i = 0; $i < sizeof($editais_com_anexo); $i++)
+        {
+            $editais_com_anexo_array[$i] = $editais_com_anexo[$i]->pai_id; 
+        }
+
+        return $editais_com_anexo_array;
+    }
+
+    public function instituicoes()
+    {
+        $instituicoes = Instituicao::select('id','nome')
+        ->get();
+        
+        return $instituicoes;
     }
 
     public function ordenaAno()
@@ -124,89 +171,14 @@ class EditalService{
         return $tipos;
     }
 
-    public function instituicoes()
+    public function filtrar($instituicao_id, $ano, $tipo_id)
     {
-        $instituicoes = Instituicao::select('id','nome')
-        ->get();
-        
-        return $instituicoes;
-    }
-
-    public function filtraPorAno($ano)
-    {
-        $editaisFiltrados = Edital::where('ano','=',$ano)
-                                    ->where('tipo_id','=',1)
+        $editaisFiltrados = Edital::where('instituicao_id', '=', $instituicao_id)
+                                    ->where('ano','=',$ano)
+                                    ->where('tipo_id','=',$tipo_id)
                                     ->select('*')
                                     ->get();
 
         return $editaisFiltrados;
-    }
-
-    public function filtraPorTipo($ano_selecionado, $tipo)
-    {
-        $editaisFiltrados = Edital::where('tipo_id','=',$tipo)
-                                    ->where('ano','=',$ano_selecionado)
-                                    ->select('id', 'nome', 'ano')
-                                    ->get();
-
-        return $editaisFiltrados;
-    }
-
-    public function filtraPorTipoEInstituicao($instituicao_id,$ano_selecionado, $tipo)
-    {
-        $editaisFiltrados = Edital::where('tipo_id','=',$tipo)
-                                    ->where('ano','=',$ano_selecionado)
-                                    ->where('instituicao_id','=',$instituicao_id)
-                                    ->select('id', 'nome', 'ano')
-                                    ->get();
-
-        return $editaisFiltrados;
-    }
-
-    public function update($data, $id)
-    {
-        try
-        {
-            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
-            $usuario = $this->repository->update($data, $id);
-
-            return [
-                'success'  => 'true',
-                'messages' => "Usuário Atualizado",
-                'data'=> $usuario,
-            ];
-        }
-        catch(Exception $e){
-
-            switch(get_class($e)){
-                
-                case QueryException::class     : return ['success' => false, 'messages' => $e->getMessage()];
-                case Exception::class          : return ['success' => false, 'messages' => $e->getMessage()];
-                default                        : return ['success' => false, 'messages' => get_class($e)];
-            }
-        }    
-    }
-
-    public function destroy($user_id){
-
-        try
-        {
-            $this->repository->delete($user_id);
-
-            return [
-                'success'   => 'true',
-                'messages'  => "Usuário removido",
-                'data'      => null,
-            ];
-        }
-        catch(Exception $e)
-        {
-            switch(get_class($e))
-            {
-                case QueryException::class     : return ['success' => false, 'messages' => $e->getMessage()];
-                case Exception::class          : return ['success' => false, 'messages' => $e->getMessage()];
-                default                        : return ['success' => false, 'messages' => get_class($e)];
-            }
-        }
     }
 }

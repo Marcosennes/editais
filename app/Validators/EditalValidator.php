@@ -18,8 +18,13 @@ class EditalValidator extends LaravelValidator
      * @var array
      */
     protected $rules = [
-        ValidatorInterface::RULE_CREATE => [
-
+        ValidatorInterface::RULE_CREATE => 
+        [
+            'nome'              => 'required',
+            'arquivo'           => 'required',
+            'ano'               => 'required',
+            'tipo_id'           => 'required',
+            'instituicao_id'   => 'required',
         ],
         ValidatorInterface::RULE_UPDATE => [],
     ];

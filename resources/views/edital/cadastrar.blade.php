@@ -135,7 +135,7 @@ function onlynumber(evt) {
                 */
 
                 $.ajax({
-                    url: "{{ route('edital.filtrarPorTipoAnexo') }}",
+                    url: "{{ route('edital.filtrarAnexo') }}",
                     type: "post",
                     data: $(this).serialize(),
                     dataType: "json",

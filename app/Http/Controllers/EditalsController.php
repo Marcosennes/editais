@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Edital;
+use App\Entities\EditalFilho;
 use App\Entities\EditalTipo;
 use App\Http\Requests\editalCreateRequest;
 use App\Repositories\EditalRepository;
@@ -23,22 +24,23 @@ class EditalsController extends Controller
 
     public function index()
     {
-        $editais = Edital::where('tipo_id', '=', 1)
-                            ->where('ano', '=', 2019)
-                            ->select('nome', 'arquivo')
-                            ->get();
-
+        $editais = $this->service->filtrar(1, 2019, 1);
+        $anexos = $this->service->anexos(1,2019,1);
+        $editais_com_anexo = $this->service->editaisComAnexo(1, 2019, 1);;
         $anos   = $this->service->ordenaAno(); 
         $tipos  = $this->service->tipos();
         $instituicoes  = $this->service->instituicoes();
 
         return view('edital.index',[
-            'anos'  => $anos,
-            'tipos' => $tipos,
-            'instituicoes' => $instituicoes,
-            'tipo_selecionado' => 1,
-            'ano_selecionado' => 2019,
-            'editais' => $editais,
+            'anos'                      => $anos,
+            'tipos'                     => $tipos,
+            'instituicoes'              => $instituicoes,
+            'instituicao_selecionada'   => 1,
+            'ano_selecionado'           => 2019,
+            'tipo_selecionado'          => 1,
+            'editais'                   => $editais,
+            'editais_com_anexos'        => $editais_com_anexo,
+            'anexos'                    => $anexos,
         ]);
     }
 
@@ -52,7 +54,6 @@ class EditalsController extends Controller
             'anos'  => $anos,
             'tipos' => $tipos,
             'instituicoes' => $instituicoes,
-            'editaisFiltrados' => '',
         ]);
     }
 
@@ -68,68 +69,35 @@ class EditalsController extends Controller
         return redirect()->route('edital.cadastrar');
     }
 
-    public function filtrarPorAno($ano)
+    public function filtrar($instituition_id, $ano, $tipo_id)
     {
-        $editaisFiltrados = $this->service->filtraPorAno($ano);
-
+        $editais = $this->service->filtrar($instituition_id, $ano, $tipo_id);
+        $anexos = $this->service->anexos($instituition_id, $ano, $tipo_id);
+        $editais_com_anexo = $this->service->editaisComAnexo($instituition_id, $ano, $tipo_id);
         $anos   = $this->service->ordenaAno(); 
         $tipos  = $this->service->tipos();
         $instituicoes  = $this->service->instituicoes();
         
         
         return view('edital.index',[
-            'anos'  => $anos,
-            'tipos' => $tipos,
-            'instituicoes' => $instituicoes,
-            'tipo_selecionado' => 1,
-            'ano_selecionado' => $ano,
-            'editaisFiltrados' => $editaisFiltrados,
-        ]);
-    }
-    
-    public function filtrarPorTipo($ano_selecionado, $tipo)
-    {
-        $editaisFiltrados = $this->service->filtraPorTipo($ano_selecionado, $tipo);
-
-        $anos   = $this->service->ordenaAno(); 
-        $tipos  = $this->service->tipos();
-        $instituicoes  = $this->service->instituicoes();
-        
-        
-        return view('edital.index',[
-            'anos'  => $anos,
-            'tipos' => $tipos,
-            'instituicoes' => $instituicoes,
-            'tipo_selecionado' => $tipo,
-            'ano_selecionado' => $ano_selecionado,
-            'editaisFiltrados' => $editaisFiltrados,
-        ]);
-    }
-    public function filtrarPorTipoEInstituicao($instituicao_id, $ano_selecionado, $tipo)
-    {
-        $editaisFiltrados = $this->service->filtraPorTipoEInstituicao($instituicao_id,$ano_selecionado, $tipo);
-
-        $anos   = $this->service->ordenaAno(); 
-        $tipos  = $this->service->tipos();
-        $instituicoes  = $this->service->instituicoes();
-        
-        
-        return view('edital.index',[
-            'anos'  => $anos,
-            'tipos' => $tipos,
-            'instituicoes' => $instituicoes,
-            'tipo_selecionado' => $tipo,
-            'ano_selecionado' => $ano_selecionado,
-            'editaisFiltrados' => $editaisFiltrados,
+            'anos'                      => $anos,
+            'tipos'                     => $tipos,
+            'instituicoes'              => $instituicoes,
+            'instituicao_selecionada'   => $instituition_id,
+            'ano_selecionado'           => $ano,
+            'tipo_selecionado'          => $tipo_id,
+            'editais'                   => $editais,
+            'editais_com_anexos'        => $editais_com_anexo,
+            'anexos'                    => $anexos,
         ]);
     }
 
-    public function filtrarPorTipoAnexo(Request $request)
+    public function filtrarAnexo(Request $request)
     {
 
-        $editaisFiltrados = $this->service->filtraPorTipoEInstituicao($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
+        $editais = $this->service->filtrar($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
         
-        echo json_encode($editaisFiltrados);
+        echo json_encode($editais);
         return;
     }
 }
