@@ -61,6 +61,27 @@ class EditalService{
                         
                         $data->file('arquivo')->storeAs('editais', $fileName);  //Salvo o arquivo
                         
+                        if(empty($data['nome'])){
+                            return [
+                                'mensagem'  => "Nome não pode ser vazio",
+                                'validacao' => false];
+                        }
+                        if(empty($data['ano']) || $data['ano'] < 1990 || $data['ano'] > 2060){
+                            return [
+                                'mensagem'  => "Ano não pode ser vazio e deve ser um valor aceito",
+                                'validacao' => false];
+                        }
+                        if(empty($data['tipo_id'])){
+                            return [
+                                'mensagem'  => "Selecione um Tipo",
+                                'validacao' => false];
+                        }
+                        if(empty($data['instituicao_id'])){
+                            return [
+                                'mensagem'  => "Selecione a Instituição",
+                                'validacao' => false];
+                        }
+
                         $aux_data =  
                         [
                             'nome'              => $data['nome'],

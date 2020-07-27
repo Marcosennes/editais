@@ -63,6 +63,17 @@ class EditalFilhoService{
                         
                         $data->file('arquivo')->storeAs('editais', $fileName);  //Salvo o arquivo
                         
+                        if(empty($data['nome'])){
+                            return [
+                                'mensagem'  => "Nome não pode ser vazio",
+                                'validacao' => false];
+                        }
+                        if(empty($data['pai_id'])){
+                            return [
+                                'mensagem'  => "Selecione um Edital para receber o anexo",
+                                'validacao' => false];
+                        }
+
                         $aux_data =  
                         [
                             'nome'              => $data['nome'],

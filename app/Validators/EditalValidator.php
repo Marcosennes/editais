@@ -24,7 +24,7 @@ class EditalValidator extends LaravelValidator
             'arquivo'           => 'required',
             'ano'               => 'required',
             'tipo_id'           => 'required',
-            'instituicao_id'   => 'required',
+            'instituicao_id'    => 'required',
         ],
         ValidatorInterface::RULE_UPDATE => [],
     ];
