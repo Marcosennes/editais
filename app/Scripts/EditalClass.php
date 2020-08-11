@@ -92,7 +92,7 @@ abstract class EditalClass{
         }
 
         // Envia o arquivo
-        if ( @ftp_put( $conexao_ftp, $destino, $arquivo_temp, FTP_BINARY ) )    //Não sei exatamente o que deve ser enviado no lugar de arquivo_temp
+        if ( @ftp_put( $conexao_ftp, $destino, $arquivo, FTP_BINARY ) )    //Não sei exatamente o que deve ser enviado no lugar de arquivo_temp
         {
         	// Se for enviado, mostra essa mensagem
         	echo 'Arquivo enviado com sucesso!';
