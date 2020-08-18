@@ -1,18 +1,49 @@
-@extends('templates.master')
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-@section('conteudo-view')
+    <!-- CSRF Token requisição AJAX -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Importando o Font Awesome -->
+    <script src="https://kit.fontawesome.com/a65264833f.js" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <link href = "https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+ 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One">
+    
+    <title>Investindo</title>
+    
+</head>
+
+<body>
+    <section class="sectionmain" id="view-conteudo">
+        <script>
+            var instituicoes            = <?php echo $instituicoes; ?>; 
+            var anos                    = <?php echo $anos; ?>;
+            var tipos                   = <?php echo $tipos; ?>;
+            //var resposta                = <?php if(isset($resposta)){ echo $resposta; } else{ echo null;} ?>
+        </script>
 <div class="offset-lg-2 col-12 col-md-12 col-lg-8" style="background-color: white">
     <div class="container">
         <div class="offset-2 col-8">
             <div class="row d-flex flex-column">
-                <form method="post" action="{{ route('edital.salvar') }}" enctype="multipart/form-data">
+                <form method="post" action="/salva_edital" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                     <h3 style="margin-top: 20px;">Cadastrar edital</h3>
                     <label for="instituicao">Instituição</label>
-                        <select name="instituicao_id" class="form-control">
-                            @foreach ($instituicoes as $instituicao)
-                                <option value="{{ $instituicao->id }}">{{ $instituicao->nome }}</option>                                            
-                            @endforeach          
+                        <select id = "instituicoes_select" name="instituicao_id" class="form-control">
+                            <script>
+                            for(i=0; i < instituicoes.length; i++){
+                                $('#instituicoes_select').append('<option value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</option>')                                
+                            }
+                            </script>         
                         </select>
                     <label style="margin-top: 10px;" for="edital">Nome do edital</label>
                         <input type="text" class="form-control" name="nome">
@@ -20,10 +51,12 @@
                         <input type="file" name="arquivo" id="arquivo">
                         <br>
                     <label style="margin-top: 10px;" for="tipo">Tipo</label>
-                        <select name="tipo_id" class="form-control"> 
-                            @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>                                            
-                            @endforeach                    
+                        <select id="tipos_select" name="tipo_id" class="form-control">
+                            <script>
+                                for(i=0; i < tipos.length; i++){
+                                    $('#tipos_select').append('<option value="' + tipos[i].id + '">' + tipos[i].nome + '</option>')                                
+                                }
+                            </script>                 
                         </select>
                     <label style="margin-top: 10px;" for="ano">Ano</label>
                         <input type="text" onkeypress="return onlynumber();" class="form-control" name="ano">
@@ -32,7 +65,13 @@
                     <a id="adicionar_anexo" class="btn btn-1">Anexar arquivo neste edital</a>
                     -->
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
-                </form>    
+                </form>   
+                <?php 
+                    if(isset($_SESSION['cadastro'])){
+                        echo "<p> asasassss</p>";
+                        echo "<p>" . $_SESSION['cadastro']['validacao'] . "</p>";
+                    }
+                ?> 
                 @if (session('cadastro'))
                     @if(session('cadastro')['validacao'] == true)
                         <div class="alert alert-success" role="alert">
@@ -49,26 +88,32 @@
                 <form name="formFiltraAnexo">
                     {{ csrf_field() }}
                     <label for="instituicao">Instituição</label>
-                        <select name="instituicao_id" class="form-control">
-                            @foreach ($instituicoes as $instituicao)
-                                <option value="{{ $instituicao->id }}">{{ $instituicao->nome }}</option>                                            
-                            @endforeach          
+                        <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
+                            <script>
+                                for(i=0; i < instituicoes.length; i++){
+                                    $('#instituicoes_anexo_select').append('<option value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</option>')                                
+                                }
+                            </script>                
                         </select>
                     <label for="ano">Ano</label>
-                    <select name="ano" id="anexoAno" class="form-control">
-                        @foreach ($anos as $ano)
-                            <option value="{{ $ano->ano }}">{{ $ano->ano }}</option>            
-                        @endforeach
+                    <select id="ano_anexo_select" name="ano" id="anexoAno" class="form-control">
+                        <script>
+                            for(i=0; i < anos.length; i++){
+                                $('#ano_anexo_select').append('<option value="' + anos[i].ano + '">' + anos[i].ano + '</option>')                                
+                            }
+                        </script>  
                     </select>
                     <label for="tipo">Tipo</label>
-                    <select name="tipo" id="anexoTipo" class="form-control">
-                        @foreach ($tipos as $tipo)
-                            <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>            
-                        @endforeach
+                    <select id="tipos_anexo_select" name="tipo" id="anexoTipo" class="form-control">
+                        <script>
+                            for(i=0; i < tipos.length; i++){
+                                $('#tipos_anexo_select').append('<option value="' + tipos[i].id + '">' + tipos[i].nome + '</option>')                                
+                            }
+                        </script>  
                     </select>
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Filtrar</button>
                 </form>
-                <form method="post" action="{{ route('editalAnexo.salvar') }}" enctype="multipart/form-data">
+                <form method="post" action="/salva_edital_anexo" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                     <div class="d-none" id="anexoTable">
                         <div class="table-overflow" style="margin-top: 20px; max-height:400px; overflow-y:auto;">
@@ -108,6 +153,9 @@
         </div>
     </div>
 </div>
+    </section>
+</body>
+
 <script>
 
 function onlynumber(evt) {
@@ -123,34 +171,33 @@ function onlynumber(evt) {
 }
 </script>
 
-@section('js')
-    <script type="text/javascript">
-            $('form[name="formFiltraAnexo"]').submit(function(event){
-                event.preventDefault();
+<script type="text/javascript">
+        $('form[name="formFiltraAnexo"]').submit(function(event){
+            event.preventDefault();
 
-                /*
-                var instituicao = $(this).find('#anexoInstituicao').val();
-                var ano         = $(this).find('#anexoAno').val();
-                var tipo        = $(this).find('#anexoTipo').val();
-                */
+            /*
+            var instituicao = $(this).find('#anexoInstituicao').val();
+            var ano         = $(this).find('#anexoAno').val();
+            var tipo        = $(this).find('#anexoTipo').val();
+            */
 
-                $.ajax({
-                    url: "{{ route('edital.filtrarAnexo') }}",
-                    type: "post",
-                    data: $(this).serialize(),
-                    dataType: "json",
-                    success: function (response) {
-                        
-                        $('#anexoTable').removeClass('d-none');
-                        $('#bodyTable').remove();
-                        $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
-                        $.each(response, function(index, edital) {
-                            $('#bodyTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' + edital.ano + '</td><td><input type="radio" name="pai_id" value="' + edital.id + '"><br></td></tr>');
-                        });
-                        console.log(response);
-                    }
-                });
-
+            $.ajax({
+                url: "/filtrarAnexo",
+                type: "post",
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function (response) {
+                
+                    $('#anexoTable').removeClass('d-none');
+                    $('#bodyTable').remove();
+                    $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
+                    $.each(response, function(index, edital) {
+                        $('#bodyTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' + edital.ano + '</td><td><input type="radio" name="pai_id" value="' + edital.id + '"><br></td></tr>');
+                    });
+                    console.log(response);
+                }
             });
-    </script>
-@endsection
+
+        });
+</script>
+</html>

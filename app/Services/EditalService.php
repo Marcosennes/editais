@@ -141,10 +141,33 @@ class EditalService extends EditalClass{
         return $anos;
     }
 
-    public function tipos()
+    public function ordenaAnoPorInstituicao($instituicao_id)
     {
+        $anos = Edital::where('instituicao_id', '=', $instituicao_id)
+                      ->select('ano')
+                      ->groupBy('ano')
+                      ->orderBy('ano', 'asc')
+                      ->get();
+
+        return $anos;
+    }
+
+    public function tipos(){
         $tipos = EditalTipo::select('id','nome')->get();
-        
+
+        return $tipos;
+    }
+
+    public function tiposSelecionados($instituicao_id, $ano)
+    {
+        $tipos = EditalTipo::join('editals', 'edital_tipos.id', '=', 'editals.tipo_id')
+                            ->select('edital_tipos.id','editals.instituicao_id', 'editals.ano', 'edital_tipos.nome')
+                            ->where('instituicao_id', '=', $instituicao_id)
+                            ->where('ano', '=', $ano)
+                            ->select('edital_tipos.id', 'edital_tipos.nome')
+                            ->groupBy('edital_tipos.id', 'edital_tipos.nome')
+                            ->get();
+
         return $tipos;
     }
 
@@ -157,5 +180,18 @@ class EditalService extends EditalClass{
                                   ->get();
 
         return $editaisFiltrados;
+    }
+
+    public function maiorAno($anos){
+
+        $ano_selecionado = $anos[0]->ano;
+        
+        for($i = 1; $i < sizeof($anos); $i++){
+            if($anos[$i]->ano > $ano_selecionado){
+                $ano_selecionado = $anos[$i]->ano;
+            }
+        }
+
+        return $ano_selecionado;
     }
 }

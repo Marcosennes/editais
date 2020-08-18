@@ -24,17 +24,10 @@ abstract class EditalClass{
             return['mensagem'  => "Campo do arquivo não pode ser vazio", 'validacao' => false];
         }
 
-        // Caminho da pasta FTP
-        $caminho = 'arquivos/';
-
-        // O destino para qual o arquivo será enviado
-        $destino = $caminho . $arquivo_nome;
-
         /* 
         Se quiser limitar o tamanho dos arquivo, basta colocar o tamanho máximo 
         em bytes. Zero é ilimitado
         */
-
         $limitar_tamanho = 0;
 
         // Tamanho do arquivo enviado
@@ -49,7 +42,6 @@ abstract class EditalClass{
         Se a variável $limitar_tamanho tiver valor e o tamanho do arquivo enviado for
         maior do que o tamanho limite, terminado aqui.
         */
-
         if ( $limitar_tamanho && $limitar_tamanho < $tamanho_arquivo )
         {
         	return['mensagem'  => "Arquivo muito grande", 'validacao' => false];
@@ -69,6 +61,9 @@ abstract class EditalClass{
         // Usuário e senha para o servidor FTP
         $usuario_ftp = 'luizotavio';
         $senha_ftp   = 'minhasenha';
+
+        // Caminho da pasta FTP
+        $caminho = 'arquivos/';
 
         // O destino para qual o arquivo será enviado
         $destino = $caminho . $arquivo_nome;
