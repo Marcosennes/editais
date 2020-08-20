@@ -27,6 +27,7 @@
         <script>
             var instituicoes            = <?php echo $instituicoes; ?>; 
             var anos                    = <?php echo $anos; ?>;
+            <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
             var tipos                   = <?php echo $tipos; ?>;
             //var resposta                = <?php if(isset($resposta)){ echo $resposta; } else{ echo null;} ?>
         </script>
@@ -65,36 +66,31 @@
                     <a id="adicionar_anexo" class="btn btn-1">Anexar arquivo neste edital</a>
                     -->
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
-                </form>   
+                </form>
                 <?php 
-                    if(isset($_SESSION['cadastro'])){
-                        echo "<p> asasassss</p>";
-                        echo "<p>" . $_SESSION['cadastro']['validacao'] . "</p>";
-                    }
+                        session_start();
+                        if(isset($_SESSION['cadastro'])){
+                            if($_SESSION['cadastro']['validacao'] == true){
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['cadastro']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
+                            }
+
+                            unset($_SESSION['cadastro']);
+                        }
                 ?> 
-                @if (session('cadastro'))
-                    @if(session('cadastro')['validacao'] == true)
-                        <div class="alert alert-success" role="alert">
-                          {{ session('cadastro')['mensagem'] }}
-                        </div>
-                    @endif
-                    @if(session('cadastro')['validacao'] == false)
-                        <div class="alert alert-danger" role="alert">
-                          {{ session('cadastro')['mensagem'] }}
-                        </div>
-                    @endif
-                @endif
                 <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                 <form name="formFiltraAnexo">
                     {{ csrf_field() }}
                     <label for="instituicao">Instituição</label>
-                        <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
-                            <script>
-                                for(i=0; i < instituicoes.length; i++){
-                                    $('#instituicoes_anexo_select').append('<option value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</option>')                                
-                                }
-                            </script>                
-                        </select>
+                    <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
+                        <script>
+                            for(i=0; i < instituicoes.length; i++){
+                                $('#instituicoes_anexo_select').append('<option value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</option>')                                
+                            }
+                        </script>                
+                    </select>
                     <label for="ano">Ano</label>
                     <select id="ano_anexo_select" name="ano" id="anexoAno" class="form-control">
                         <script>
@@ -137,18 +133,18 @@
                         <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Cadastrar</button>
                     </div>
                 </form>
-                @if (session('cadastroAnexo'))
-                @if(session('cadastroAnexo')['validacao'] == true)
-                    <div class="alert alert-success" role="alert">
-                      {{ session('cadastroAnexo')['mensagem'] }}
-                    </div>
-                @endif
-                @if(session('cadastroAnexo')['validacao'] == false)
-                    <div class="alert alert-danger" role="alert">
-                      {{ session('cadastroAnexo')['mensagem'] }}
-                    </div>
-                @endif
-            @endif
+            <?php 
+                if(isset($_SESSION['cadastro_anexo'])){
+                    if($_SESSION['cadastro_anexo']['validacao'] == true){
+                        echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro_anexo']['mensagem'] . '</div>';
+                    }
+                    elseif($_SESSION['cadastro_anexo']['validacao'] == false){
+                        echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro_anexo']['mensagem'] . '</div>';
+                    }
+
+                    unset($_SESSION['cadastro_anexo']);
+                }
+            ?> 
             </div>
         </div>
     </div>
@@ -194,10 +190,48 @@ function onlynumber(evt) {
                     $.each(response, function(index, edital) {
                         $('#bodyTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' + edital.ano + '</td><td><input type="radio" name="pai_id" value="' + edital.id + '"><br></td></tr>');
                     });
-                    console.log(response);
                 }
             });
 
         });
+</script>
+<script>
+    $('#instituicoes_anexo_select').click(function(event){
+
+        $("#instituicoes_anexo_select option:selected").each(function() {
+            var instituicao_selecionada = $(this).val();
+            anos = anos_tipos_instituicoes[(instituicao_selecionada - 1)];
+        });
+        
+        $("#ano_anexo_select option").remove();
+        for(var i=0; i<anos.length; i++){
+            $("#ano_anexo_select").append('<option value="' + anos[i].ano + '">' + anos[i].ano + '</option>')
+        }
+    });
+
+    $('#ano_anexo_select').click(function(event){
+        $("#instituicoes_anexo_select option:selected").each(function() {
+
+            var instituicao_selecionada = $(this).val();
+
+            $("#ano_anexo_select option:selected").each(function() {
+                var ano_selecionado = $(this).val();
+                var tipos_ano = [];
+                for(i=0; i<anos_tipos_instituicoes[(instituicao_selecionada - 1)].length; i++){
+                    if(anos_tipos_instituicoes[(instituicao_selecionada - 1)][i].ano == ano_selecionado){
+                        var tamanho = anos_tipos_instituicoes[(instituicao_selecionada - 1)][i].tipos.length
+                        for(k=0; k< tamanho; k++){
+                            tipos_ano[k] = anos_tipos_instituicoes[(instituicao_selecionada - 1)][i].tipos[k];
+                        }
+                    }
+                }
+            
+                $("#tipos_anexo_select option").remove();
+                for(var i=0; i<tipos_ano.length; i++){
+                    $("#tipos_anexo_select").append('<option value="' + tipos_ano[i].tipo_id + '">' + tipos_ano[i].nome + '</option>')
+                }
+            });
+        });
+    });
 </script>
 </html>

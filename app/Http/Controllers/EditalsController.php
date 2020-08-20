@@ -47,14 +47,20 @@ class EditalsController extends Controller
 
     public function cadastrar()
     {
-        $anos           = $this->service->ordenaAno();
-        $tipos          = $this->service->tipos();
-        $instituicoes   = $this->service->instituicoes();
+        $instituicoes               = $this->service->instituicoes();
+        $anos                       = $this->service->ordenaAno();
+        $anos_tipos_instituicoes    = array();
+        $tipos                      = $this->service->tipos();
+
+        for($i = 0; $i < sizeof($instituicoes); $i++){
+            $anos_tipos_instituicoes[$i]  = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
+        }
         
         return view('edital.cadastrar',[
-            'anos'          => $anos,
-            'tipos'         => $tipos,
-            'instituicoes'  => $instituicoes,
+            'anos'                      => $anos,
+            'anos_tipos_instituicoes'   => $anos_tipos_instituicoes,
+            'tipos'                     => $tipos,
+            'instituicoes'              => $instituicoes,
         ]);
     }
 
@@ -67,10 +73,10 @@ class EditalsController extends Controller
             'validacao' => $resposta['validacao'],
         ]);
         
-        /*
-        $_SESSION['cadastro']['validacao']  = $resposta['validacao'];
+        session_start();
         $_SESSION['cadastro']['mensagem']   = $resposta['mensagem'];
-        */
+        $_SESSION['cadastro']['validacao']  = $resposta['validacao'];
+        
         
         return redirect()->route('edital.cadastrar', [
 

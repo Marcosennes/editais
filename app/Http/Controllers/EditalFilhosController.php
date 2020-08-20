@@ -25,11 +25,10 @@ class EditalFilhosController extends Controller
     {
         $resposta = $this->service->salvar($request);
 
-        session()->flash('cadastroAnexo',[
-            'mensagem'  => $resposta['mensagem'],
-            'validacao' => $resposta['validacao'],
-        ]);
-
+        session_start();
+        $_SESSION['cadastro_anexo']['validacao']  = $resposta['validacao'];
+        $_SESSION['cadastro_anexo']['mensagem']   = $resposta['mensagem'];
+        
         return redirect()->route('edital.cadastrar');
     }
 }

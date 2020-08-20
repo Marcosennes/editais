@@ -152,6 +152,35 @@ class EditalService extends EditalClass{
         return $anos;
     }
 
+    public function ordenaAnoTipoPorInstituicao($instituicao_id)
+    {
+        $anos = Edital::where('instituicao_id', '=', $instituicao_id)
+                      ->select('ano')
+                      ->groupBy('ano')
+                      ->orderBy('ano', 'asc')
+                      ->get();
+
+        for($i=0; $i<sizeof($anos); $i++){
+            $anos[$i]->tipos = Edital::where('instituicao_id', '=', $instituicao_id)
+                                     ->where('ano', '=', $anos[$i]->ano)
+                                     ->select('tipo_id')
+                                     ->groupBy('tipo_id')
+                                     ->orderBy('tipo_id', 'asc')
+                                     ->get(); 
+
+            for($k=0; $k<sizeof($anos[$i]->tipos); $k++){
+                $anos[$i]->tipos[$k]->nome = EditalTipo::where('id', '=', $anos[$i]->tipos[$k]->tipo_id)
+                                                       ->select('nome')
+                                                       ->get();
+
+            $anos[$i]->tipos[$k]->nome = $anos[$i]->tipos[$k]->nome[0]->nome;
+            }
+        }
+        //dd($anos[0]->ano, $anos[0]->tipos[1]->tipo_id);
+        
+        return $anos;
+    }
+
     public function tipos(){
         $tipos = EditalTipo::select('id','nome')->get();
 
