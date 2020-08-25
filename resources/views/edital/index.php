@@ -16,7 +16,7 @@
  
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One">
     
-    <title>Investindo</title>
+    <title></title>
     
 </head>
 

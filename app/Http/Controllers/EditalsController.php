@@ -68,10 +68,12 @@ class EditalsController extends Controller
     {
         $resposta = $this->service->salvar($request);
 
+        /*
         session()->flash('cadastro',[
             'mensagem'  => $resposta['mensagem'],
             'validacao' => $resposta['validacao'],
         ]);
+        */
         
         session_start();
         $_SESSION['cadastro']['mensagem']   = $resposta['mensagem'];

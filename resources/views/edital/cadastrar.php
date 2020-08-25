@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- CSRF Token requisição AJAX -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- <meta name="csrf-token" content="<?php //echo csrf_field(); ?>"> -->
 
     <!-- Importando o Font Awesome -->
     <script src="https://kit.fontawesome.com/a65264833f.js" crossorigin="anonymous"></script>
@@ -18,7 +18,7 @@
  
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fredoka+One">
     
-    <title>Investindo</title>
+    <title></title>
     
 </head>
 
@@ -29,15 +29,13 @@
             var anos                    = <?php echo $anos; ?>;
             <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
             var tipos                   = <?php echo $tipos; ?>;
-            //var resposta                = <?php if(isset($resposta)){ echo $resposta; } else{ echo null;} ?>
         </script>
 <div class="offset-lg-2 col-12 col-md-12 col-lg-8" style="background-color: white">
     <div class="container">
         <div class="offset-2 col-8">
             <div class="row d-flex flex-column">
                 <form method="post" action="/salva_edital" enctype="multipart/form-data">
-                    {!! csrf_field() !!}
-                    <h3 style="margin-top: 20px;">Cadastrar edital</h3>
+                    <?php echo csrf_field(); ?>                    <h3 style="margin-top: 20px;">Cadastrar edital</h3>
                     <label for="instituicao">Instituição</label>
                         <select id = "instituicoes_select" name="instituicao_id" class="form-control">
                             <script>
@@ -82,7 +80,7 @@
                 ?> 
                 <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                 <form name="formFiltraAnexo">
-                    {{ csrf_field() }}
+                    <?php echo csrf_field(); ?>
                     <label for="instituicao">Instituição</label>
                     <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
                         <script>
@@ -94,8 +92,9 @@
                     <label for="ano">Ano</label>
                     <select id="ano_anexo_select" name="ano" id="anexoAno" class="form-control">
                         <script>
-                            for(i=0; i < anos.length; i++){
-                                $('#ano_anexo_select').append('<option value="' + anos[i].ano + '">' + anos[i].ano + '</option>')                                
+                            anos_instituicao_selecionada = anos_tipos_instituicoes[0];
+                            for(var i=0; i<anos_instituicao_selecionada.length; i++){
+                               $("#ano_anexo_select").append('<option value="' + anos_instituicao_selecionada[i].ano + '">' + anos_instituicao_selecionada[i].ano + '</option>')
                             }
                         </script>  
                     </select>
@@ -110,7 +109,7 @@
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Filtrar</button>
                 </form>
                 <form method="post" action="/salva_edital_anexo" enctype="multipart/form-data">
-                    {!! csrf_field() !!}
+                    <?php echo csrf_field(); ?>
                     <div class="d-none" id="anexoTable">
                         <div class="table-overflow" style="margin-top: 20px; max-height:400px; overflow-y:auto;">
                             <table id="tableAnexos" class="table table-sm table-striped table-bordered table-hover" style="background-color: white">
