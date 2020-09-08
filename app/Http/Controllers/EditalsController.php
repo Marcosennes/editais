@@ -9,7 +9,7 @@ use App\Http\Requests\editalCreateRequest;
 use App\Repositories\EditalRepository;
 use App\Services\EditalService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class EditalsController extends Controller
 {
@@ -47,13 +47,13 @@ class EditalsController extends Controller
 
     public function cadastrar()
     {
-        $instituicoes               = $this->service->instituicoes();
-        $anos                       = $this->service->ordenaAno();
-        $anos_tipos_instituicoes    = array();
-        $tipos                      = $this->service->tipos();
+        $instituicoes                       = $this->service->instituicoes();
+        $anos                               = $this->service->ordenaAno();
+        $anos_tipos_instituicoes            = array();
+        $tipos                              = $this->service->tipos();
 
         for($i = 0; $i < sizeof($instituicoes); $i++){
-            $anos_tipos_instituicoes[$i]  = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
+            $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
         }
         
         return view('edital.cadastrar',[
@@ -76,6 +76,7 @@ class EditalsController extends Controller
         */
         
         session_start();
+
         $_SESSION['cadastro']['mensagem']   = $resposta['mensagem'];
         $_SESSION['cadastro']['validacao']  = $resposta['validacao'];
         
@@ -88,24 +89,23 @@ class EditalsController extends Controller
 
     public function filtrar($instituicao_id, $ano, $tipo_id)
     {
-        $editais = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
-        $anexos = $this->service->anexos($instituicao_id, $ano, $tipo_id);
-        $editais_com_anexo = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);
-        $anos   = $this->service->ordenaAnoPorInstituicao($instituicao_id); 
-        $tipos  = $this->service->tiposSelecionados($instituicao_id, $ano);
-        $instituicoes  = $this->service->instituicoes();
+        $editais            = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
+        $anexos             = $this->service->anexos($instituicao_id, $ano, $tipo_id);
+        $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);
+        $anos               = $this->service->ordenaAnoPorInstituicao($instituicao_id); 
+        $tipos              = $this->service->tiposSelecionados($instituicao_id, $ano);
+        $instituicoes       = $this->service->instituicoes();
 
-        if(!(isset($editais[0]))){
-            if(isset($tipos[0])){
-                $tipo_id            = $tipos[0]->id;
-
+        if(!(isset($editais[0]))){  //não existe nenhum edital com os filtros recebidos (instituicao, ano e tipo)
+            if(isset($tipos[0])){   //existe algum tipo no ano recebido (instituicao, ano)
+                $tipo_id            = $tipos[0]->id;    //a página exibira o primeiro tipo disponível daquele ano
                 $editais            = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
                 $anexos             = $this->service->anexos($instituicao_id, $ano, $tipo_id);
                 $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);        
             }
-            else if(isset($anos[0])){
+            else if(isset($anos[0])){   //existe pelo menos um ano na instituicao recebida
 
-                $ano                = $anos[(sizeof($anos) -1)]->ano;
+                $ano                = $anos[(sizeof($anos) -1)]->ano;   //é selecionado o último ano daquela instituicao
                 $tipos              = $this->service->tiposSelecionados($instituicao_id, $ano);
                 $tipo_id            = $tipos[0]->id;
 
@@ -114,15 +114,7 @@ class EditalsController extends Controller
                 $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);        
             }
             else{
-                $instituicao_id     = 1;
-                $ano                = 2019;
-                $tipo_id            = 1;
-                
-                $anos               = $this->service->ordenaAnoPorInstituicao($instituicao_id); 
-                $tipos              = $this->service->tiposSelecionados($instituicao_id, $ano);
-                $editais            = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
-                $anexos             = $this->service->anexos($instituicao_id, $ano, $tipo_id);
-                $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);        
+                return abort(404);  
             }
         }
 
@@ -145,6 +137,16 @@ class EditalsController extends Controller
         ]);
     }
 
+    public function filtrarAnexo(Request $request)
+    {
+
+        $editais = $this->service->filtrar($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
+        
+        echo json_encode($editais);
+        return;
+    }
+
+    /*
     public function filtrarPost(Request $request)
     {
         $editais = $this->service->filtrar($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));
@@ -169,13 +171,5 @@ class EditalsController extends Controller
         json_encode($resposta);
         return response()->json($resposta);
     }
-
-    public function filtrarAnexo(Request $request)
-    {
-
-        $editais = $this->service->filtrar($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
-        
-        echo json_encode($editais);
-        return;
-    }
+    */
 }

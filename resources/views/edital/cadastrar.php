@@ -30,12 +30,13 @@
             <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
             var tipos                   = <?php echo $tipos; ?>;
         </script>
-<div class="offset-lg-2 col-12 col-md-12 col-lg-8" style="background-color: white">
+<div class="offset-lg-2 col-12 col-md-12 col-lg-8">
     <div class="container">
         <div class="offset-2 col-8">
             <div class="row d-flex flex-column">
                 <form method="post" action="/salva_edital" enctype="multipart/form-data">
-                    <?php echo csrf_field(); ?>                    <h3 style="margin-top: 20px;">Cadastrar edital</h3>
+                    <?php echo csrf_field(); ?>                    
+                    <h3 style="margin-top: 20px;">Cadastrar edital</h3>
                     <label for="instituicao">Instituição</label>
                         <select id = "instituicoes_select" name="instituicao_id" class="form-control">
                             <script>
@@ -66,17 +67,17 @@
                     <button class="btn btn-primary" style="width: 100%; margin-top: 11px;" type="submit">Cadastrar</button>
                 </form>
                 <?php 
-                        session_start();
-                        if(isset($_SESSION['cadastro'])){
-                            if($_SESSION['cadastro']['validacao'] == true){
-                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
-                            }
-                            elseif($_SESSION['cadastro']['validacao'] == false){
-                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
-                            }
-
-                            unset($_SESSION['cadastro']);
+                    session_start();
+                    if(isset($_SESSION['cadastro'])){
+                        if($_SESSION['cadastro']['validacao'] == true){
+                            echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
                         }
+                        elseif($_SESSION['cadastro']['validacao'] == false){
+                            echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
+                        }
+
+                        unset($_SESSION['cadastro']);
+                    }
                 ?> 
                 <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                 <form name="formFiltraAnexo">
@@ -144,6 +145,7 @@
                     unset($_SESSION['cadastro_anexo']);
                 }
             ?> 
+            <a href="/logout" class="btn btn-danger" style="width: 100%; margin-top: 11px;">Sair</a>
             </div>
         </div>
     </div>

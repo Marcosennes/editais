@@ -42,10 +42,10 @@ class EditalService extends EditalClass{
         {
             $arquivo_nome_verification = $this->repository->findWhere(['arquivo' => $arquivo_nome])->first();
             
-            if($arquivo_nome_verification)                                   //Existe algum arquivo com o mesmo nome
+            if($arquivo_nome_verification)  //Existe algum arquivo com o mesmo nome
             {                                    
                 return['mensagem'  => "Já existe arquivo com esse nome. Mude o nome do edital.", 'validacao' => false];                
-            }else                                                       //Não existe um arquivo com esse nome no banco
+            }else   //Não existe um arquivo com esse nome no banco
             {
                 $data->file('arquivo')->storeAs('editais', $arquivo_nome);  //Salvo o arquivo
                 
@@ -89,7 +89,7 @@ class EditalService extends EditalClass{
         }
     }
 
-    public function anexos($instituicao_id, $ano, $tipo_id)
+    public function anexos($instituicao_id, $ano, $tipo_id) //retorna os anexos de um edital
     {
         $anexos = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
                              ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
@@ -102,7 +102,7 @@ class EditalService extends EditalClass{
         return $anexos;
     }
 
-    public function editaisComAnexo($instituicao_id, $ano, $tipo_id)
+    public function editaisComAnexo($instituicao_id, $ano, $tipo_id)    //retorna um vetor com o id de todos os editais com anexo
     {
         $editais_com_anexo = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
                                         ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
@@ -152,7 +152,7 @@ class EditalService extends EditalClass{
         return $anos;
     }
 
-    public function ordenaAnoTipoPorInstituicao($instituicao_id)
+    public function ordenaAnoTipoPorInstituicao($instituicao_id)    //retorna os anos de uma instituicao com os tipos que cada ano possui
     {
         $anos = Edital::where('instituicao_id', '=', $instituicao_id)
                       ->select('ano')
@@ -160,7 +160,7 @@ class EditalService extends EditalClass{
                       ->orderBy('ano', 'asc')
                       ->get();
 
-        for($i=0; $i<sizeof($anos); $i++){
+        for($i=0; $i<sizeof($anos); $i++){  // $anos recebe os ids dos tipos que cada ano possui
             $anos[$i]->tipos = Edital::where('instituicao_id', '=', $instituicao_id)
                                      ->where('ano', '=', $anos[$i]->ano)
                                      ->select('tipo_id')
@@ -168,7 +168,7 @@ class EditalService extends EditalClass{
                                      ->orderBy('tipo_id', 'asc')
                                      ->get(); 
 
-            for($k=0; $k<sizeof($anos[$i]->tipos); $k++){
+            for($k=0; $k<sizeof($anos[$i]->tipos); $k++){   //é necessário para encontrar o nome de cada tipo
                 $anos[$i]->tipos[$k]->nome = EditalTipo::where('id', '=', $anos[$i]->tipos[$k]->tipo_id)
                                                        ->select('nome')
                                                        ->get();
