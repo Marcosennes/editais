@@ -20,7 +20,7 @@ Route::group(['middleware' => 'autenticar.login'], function() {
      * uma chamada post ao invés de usar uma rota get. Não pode ser utilizada a mesma rota utilizada sem a requisição ajax
      * pois ela retorna uma view. Precisamos de uma função que retorne somente o objeto em json.
      */
-    Route::post('/filtrarpost',         ['uses' => 'EditalsController@filtrarPost',     'as' =>'editais.filtrarPost']); 
+    //Route::post('/filtrarpost',         ['uses' => 'EditalsController@filtrarPost',     'as' =>'editais.filtrarPost']); 
 
     /*
     //Rota para registrar novo usuário com privilégios. Se desativada a inserção de novos usuários deve ser realizada direto do banco de dados

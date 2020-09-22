@@ -47,10 +47,10 @@
                         }
                         else{
                             if(i == (instituicoes.length - 1)){
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a>');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a>');
                             }
                             else{
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" value="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a> | ');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a> | ');
                             }
                         }
                     }
@@ -141,12 +141,14 @@
     
     $('#instituicoes_index a').click(function(event) {
     var filtro = {
-        instituicao_id :    $(this).attr('value'),
+        instituicao_id :    $(this).attr('instituicao_attr'),
         ano :               ano_selecionado,
         tipo_id :           tipo_selecionado,
     }
+
+    console.log(filtro)
     
-    instituicao_selecionada = $(this).attr('value')
+    instituicao_selecionada = $(this).attr('instituicoes_index')
     $.ajax({ 
         url: "/filtrarpost",
         type: "post",
