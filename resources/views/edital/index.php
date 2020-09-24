@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <!-- Blade -->
+    <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
+
+    <!-- Sem Blade -->
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+    <!-- <input type="hidden" name="_token" value="<?php //echo csrf_token(); ?>"> -->
 
     <!-- Importando o Font Awesome -->
     <script src="https://kit.fontawesome.com/a65264833f.js" crossorigin="anonymous"></script>
@@ -47,10 +53,10 @@
                         }
                         else{
                             if(i == (instituicoes.length - 1)){
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a>');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + instituicoes[i].nome + '</a>');
                             }
                             else{
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '">' + instituicoes[i].nome + '</a> | ');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + instituicoes[i].nome + '</a> | ');
                             }
                         }
                     }
@@ -58,121 +64,135 @@
             </div>
         </div>
         <br><em><strong>Recomendamos o uso dos navegadores <span style="color: #ff0000;">Mozilla Firefox <span style="color: #000000;">ou</span> Google Chrome.</span></strong></em>
-        <div id="anos">
-            <div id="anos_index">
-                <script>
-                    for(var i=0; i<anos.length; i++){
-                        if(anos[i].ano == ano_selecionado){
-                            if(i == (anos.length - 1)){
-                                $('#anos_index').append(anos[i].ano)
-                            }
-                            else{
-                                $('#anos_index').append(anos[i].ano + ' | ')
-                            }
-                        }
-                        else{
-                            if(i == (anos.length - 1)){
-                                $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a>');
-                            }
-                            else{
-                                $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a> | ');
-                            }
-                        }
-                    }
-                </script>
-            </div>
-        </div>
-        <fieldset>
-            <legend id="legenda_editais">EDITAIS <script>$('#legenda_editais').append(ano_selecionado)</script></legend>
-            <div id="tipos">
-                <div id="tipos_index">
+            <div id="anos">
+                <div id="anos_index">
                     <script>
-                        for(i=0; i < tipos.length; i++){
-                            if(tipos[i].id == tipo_selecionado){
-                                if(i == (tipos.length - 1)){
-                                    $('#tipos_index').append(tipos[i].nome)
+                        for(var i=0; i<anos.length; i++){
+                            if(anos[i].ano == ano_selecionado){
+                                if(i == (anos.length - 1)){
+                                    $('#anos_index').append(anos[i].ano)
                                 }
                                 else{
-                                    $('#tipos_index').append(tipos[i].nome + ' | ')
+                                    $('#anos_index').append(anos[i].ano + ' | ')
                                 }
                             }
                             else{
-                                if(i == (tipos.length - 1)){
-                                    $('#tipos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + ano_selecionado + '/' + tipos[i].id + '" id= "filtra_tipo" value="' + tipos[i].id + '">' + tipos[i].nome + '</a>')
+                                if(i == (anos.length - 1)){
+                                    $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a>');
                                 }
                                 else{
-                                    $('#tipos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + ano_selecionado + '/' + tipos[i].id + '" id= "filtra_tipo" value="' + tipos[i].id + '">' + tipos[i].nome + '</a> | ')
+                                    $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a> | ');
                                 }
                             }
                         }
                     </script>
                 </div>
             </div>
-            <div id="editais">
-                <div id="editais_index">
-                    <script>
-                        for(i = 0; i < editais.length; i++){
-                            $('#editais_index').append('<a href="#">' + editais[i].nome + '</a><br>')
-                            for(j = 0; j < editais_com_anexo.length; j++){
-                                if(editais[i].id == editais_com_anexo[j]){
-                                    for(k = 0; k < anexos.length; k++){
-                                        if(editais[i].id == anexos[k].pai_id){
-                                        $('#editais_index').append('<i class="fa fa-arrow-right" aria-hidden="true"></i>') 
-                                        $('#editais_index').append('<a href="#">' + anexos[k].nome + '</a><br>') 
+            <fieldset>
+                <legend id="legenda_editais">EDITAIS <script>$('#legenda_editais').append(ano_selecionado)</script></legend>
+                <div id="tipos">
+                    <div id="tipos_index">
+                        <script>
+                            for(i=0; i < tipos.length; i++){
+                                if(tipos[i].id == tipo_selecionado){
+                                    if(i == (tipos.length - 1)){
+                                        $('#tipos_index').append(tipos[i].nome)
+                                    }
+                                    else{
+                                        $('#tipos_index').append(tipos[i].nome + ' | ')
+                                    }
+                                }
+                                else{
+                                    if(i == (tipos.length - 1)){
+                                        $('#tipos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + ano_selecionado + '/' + tipos[i].id + '" id= "filtra_tipo" value="' + tipos[i].id + '">' + tipos[i].nome + '</a>')
+                                    }
+                                    else{
+                                        $('#tipos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + ano_selecionado + '/' + tipos[i].id + '" id= "filtra_tipo" value="' + tipos[i].id + '">' + tipos[i].nome + '</a> | ')
+                                    }
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+                <div id="editais">
+                    <div id="editais_index">
+                        <script>
+                            for(i = 0; i < editais.length; i++){
+                                $('#editais_index').append('<a href="#">' + editais[i].nome + '</a><br>')
+                                for(j = 0; j < editais_com_anexo.length; j++){
+                                    if(editais[i].id == editais_com_anexo[j]){
+                                        for(k = 0; k < anexos.length; k++){
+                                            if(editais[i].id == anexos[k].pai_id){
+                                            $('#editais_index').append('<i class="fa fa-arrow-right" aria-hidden="true"></i>') 
+                                            $('#editais_index').append('<a href="#">' + anexos[k].nome + '</a><br>') 
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                    </script>
+                        </script>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
-    </section>
-</body>
+            </fieldset>
+        </section>
+    </body>
+
+    <script>
+/*
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+    document.querySelectorAll('#instituicoes_index a').forEach(function(link) {
+        link.onclick = function(event){
+            event.preventDefault();
+
+        var filtro = {
+            instituicao_id :    $(this).attr('instituicao_attr'),
+            ano :               $(this).attr('ano_attr'),
+            tipo_id :           $(this).attr('tipo_attr'),
+        }
+
+        console.log(filtro)
+        
+        instituicao_selecionada = $(this).attr('instituicoes_index')
+        $.ajax({ 
+            url: "/filtrarpost",
+            type: "post",
+            data: filtro,
+            dataType: "json",
+            success: function (response) 
+            {
+                $('#instituicoes_index').remove()
+                $('#instituicoes').append('<div id="instituicoes_index">')
+                for(var i =0; i<response.instituicoes.length; i++){
+                    if(response.instituicoes[i].id == instituicao_selecionada){
+                        $('#instituicoes_index').append(response.instituicoes[i].nome + ' |')
+                    }
+                    else{
+                        $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + response.instituicoes[i].nome + '</a> |');
+                    }
+                }
+                $('#instituicoes').append('</div>')
+            }
+            
+        })
+    }
+})
+*/
+</script>
 
 <script>
-/*
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    /*
+    document.querySelectorAll('#instituicoes_index a').forEach(link => {
+        link.onclick = function(event){
+            event.preventDefault()
+            console.log('aaaa')
         }
-    });
-    
-    $('#instituicoes_index a').click(function(event) {
-    var filtro = {
-        instituicao_id :    $(this).attr('instituicao_attr'),
-        ano :               ano_selecionado,
-        tipo_id :           tipo_selecionado,
-    }
-
-    console.log(filtro)
-    
-    instituicao_selecionada = $(this).attr('instituicoes_index')
-    $.ajax({ 
-        url: "/filtrarpost",
-        type: "post",
-        data: filtro,
-        dataType: "json",
-        success: function (response) 
-        {
-            $('#instituicoes_index').remove()
-            $('#instituicoes').append('<div id="instituicoes_index">')
-            for(var i =0; i<response.instituicoes.length; i++){
-                if(response.instituicoes[i].id == instituicao_selecionada){
-                    $('#instituicoes_index').append(response.instituicoes[i].nome + ' |')
-                }
-                else{
-                    $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + response.instituicoes[i].nome + '</a> |');
-                }
-            }
-            $('#instituicoes').append('</div>')
-        }
-            });
-
-    event.preventDefault();
-});
-*/
+    })
+    */
 </script>
 
 </html>

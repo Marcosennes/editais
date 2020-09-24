@@ -146,7 +146,7 @@ class EditalsController extends Controller
         return;
     }
 
-    /*
+    
     public function filtrarPost(Request $request)
     {
         $editais            = $this->service->filtrar($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));
@@ -193,5 +193,5 @@ class EditalsController extends Controller
         json_encode($resposta);
         return response()->json($resposta);
     }
-    */
+    
 }
