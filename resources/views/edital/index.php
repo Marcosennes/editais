@@ -53,10 +53,10 @@
                         }
                         else{
                             if(i == (instituicoes.length - 1)){
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + instituicoes[i].nome + '</a>');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipo_selecionado +'">' + instituicoes[i].nome + '</a>');
                             }
                             else{
-                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + instituicoes[i].nome + '</a> | ');
+                                $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '" instituicao_attr="' + instituicoes[i].id + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipo_selecionado +'">' + instituicoes[i].nome + '</a> | ');
                             }
                         }
                     }
@@ -135,10 +135,21 @@
                 </div>
             </fieldset>
         </section>
+
+        <!-- 
+        <form action="/filtrarpost" method="POST"> 
+            <?php echo csrf_field(); ?>                    
+            <input type="text" name="instituicao_id">
+            <input type="text" name="ano">
+            <input type="text" name="tipo_id">
+            <button type="submit">Enviar</button>
+        </form>
+        -->
+        
     </body>
 
     <script>
-/*
+    /*
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -165,6 +176,7 @@
             dataType: "json",
             success: function (response) 
             {
+                console.log(response)
                 $('#instituicoes_index').remove()
                 $('#instituicoes').append('<div id="instituicoes_index">')
                 for(var i =0; i<response.instituicoes.length; i++){

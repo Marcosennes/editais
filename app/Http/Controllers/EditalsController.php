@@ -155,7 +155,7 @@ class EditalsController extends Controller
         $anos               = $this->service->ordenaAnoPorInstituicao($request->get('instituicao_id')); 
         $tipos              = $this->service->tiposSelecionados($request->get('instituicao_id'), $request->get('ano'));
         $instituicoes       = $this->service->instituicoes();
-
+        
         if(!(isset($editais[0]))){  //não existe nenhum edital com os filtros recebidos (instituicao, ano e tipo)
             if(isset($tipos[0])){   //existe algum tipo no ano recebido (instituicao, ano)
                 $tipo_id            = $tipos[0]->id;    //a página exibira o primeiro tipo disponível daquele ano
@@ -164,17 +164,16 @@ class EditalsController extends Controller
                 $editais_com_anexo  = $this->service->editaisComAnexo($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));        
             }
             else if(isset($anos[0])){   //existe pelo menos um ano na instituicao recebida
-
                 $ano                = $anos[(sizeof($anos) -1)]->ano;   //é selecionado o último ano daquela instituicao
-                $tipos              = $this->service->tiposSelecionados($request->get('instituicao_id'), $request->get('ano'));
+                $tipos              = $this->service->tiposSelecionados($request->get('instituicao_id'), $ano);
                 $tipo_id            = $tipos[0]->id;
-
+                
                 $editais            = $this->service->filtrar($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));
                 $anexos             = $this->service->anexos($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));
                 $editais_com_anexo  = $this->service->editaisComAnexo($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));        
             }
             else{
-                return abort(404);  
+                //return abort(404);  
             }
         }
 
@@ -182,16 +181,17 @@ class EditalsController extends Controller
             'instituicoes'              => $instituicoes,
             'anos'                      => $anos,
             'tipos'                     => $tipos,
-            'instituicao_selecionada'   => $instituicao_id,
-            'ano_selecionado'           => $ano,
-            'tipo_selecionado'          => $tipo_id,
+            'instituicao_selecionada'   => $request->get('instituicao_id'),
+            'ano_selecionado'           => $request->get('ano'),
+            'tipo_selecionado'          => $request->get('tipo_id'),
             'editais'                   => $editais,
             'editais_com_anexo'         => json_encode($editais_com_anexo),
             'anexos'                    => $anexos,
         ];
-
-        json_encode($resposta);
-        return response()->json($resposta);
+        
+        //return response()->json($resposta);
+        echo json_encode($resposta);
+        return;
     }
     
 }
