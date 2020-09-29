@@ -185,11 +185,12 @@ class EditalsController extends Controller
             'ano_selecionado'           => $request->get('ano'),
             'tipo_selecionado'          => $request->get('tipo_id'),
             'editais'                   => $editais,
-            'editais_com_anexo'         => json_encode($editais_com_anexo),
+            'editais_com_anexo'         => $editais_com_anexo,
             'anexos'                    => $anexos,
         ];
         
         //return response()->json($resposta);
+        // dd($resposta['editais']);
         echo json_encode($resposta);
         return;
     }
