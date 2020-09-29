@@ -147,7 +147,46 @@
         -->   
     </body>
 <script>
+/*
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        
+    document.querySelectorAll('#anos_index a').forEach(function(link) {
+        $('#anos').on('click', '#anos_index a', function(event){
+            event.preventDefault();
 
+        var filtro = {
+            instituicao_id :    $(this).attr('instituicao_attr'),
+            ano :               $(this).attr('ano_attr'),
+            tipo_id :           $(this).attr('tipo_attr'),
+        }
+
+        console.log(filtro)
+        
+        tipo_selecionado = $(this).attr('tipo_attr')
+
+        $.ajax({ 
+            url: "/filtrarpost",
+            type: "post",
+            data: filtro,
+            dataType: "json",
+            success: function (response) 
+            {
+                console.log(response)
+                tipos_update(response)
+                editais_update(response)
+
+            }
+            
+        })
+    })
+})
+*/
+</script>
+<script>
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -159,7 +198,7 @@
         // $('#ocultaLancamento').on('click', function()
         // $(link).on('click', function(event))
         // link.onclick = function(event)
-        $(link).on('click', function(event){
+        $('#tipos').on('click', '#tipos_index a', function(event){
             event.preventDefault();
 
         var filtro = {
