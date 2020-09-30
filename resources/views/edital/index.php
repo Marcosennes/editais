@@ -78,10 +78,10 @@
                             }
                             else{
                                 if(i == (anos.length - 1)){
-                                    $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a>');
+                                    $('#anos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + anos[i].ano +'">' + anos[i].ano + '</a>');
                                 }
                                 else{
-                                    $('#anos_index').append('<a href="/filtrar/' + instituicao_selecionada + '/' + anos[i].ano + '/' + 1 + '" id= "filtra_ano" value="' + anos[i].ano + '">' + anos[i].ano + '</a> | ');
+                                    $('#anos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + anos[i].ano +'">' + anos[i].ano + '</a> | ');
                                 }
                             }
                         }
@@ -89,7 +89,9 @@
                 </div>
             </div>
             <fieldset>
-                <legend id="legenda_editais">EDITAIS <script>$('#legenda_editais').append(ano_selecionado)</script></legend>
+                <div id="ano_titulo_aux">
+                    <legend id="legenda_editais">EDITAIS <script>$('#legenda_editais').append(ano_selecionado)</script></legend>
+                </div>
                 <div id="tipos">
                     <div id="tipos_index">
                         <script>
@@ -104,10 +106,10 @@
                                 }
                                 else{
                                     if(i == (tipos.length - 1)){
-                                        $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipos[i].id +'" value="' + tipos[i].id + '">' + tipos[i].nome + '</a>')
+                                        $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipos[i].id +'">' + tipos[i].nome + '</a>')
                                     }
                                     else{
-                                        $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipos[i].id +'" value="' + tipos[i].id + '">' + tipos[i].nome + '</a> | ')
+                                        $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada + '" ano_attr = "' + ano_selecionado +'" tipo_attr = "' + tipos[i].id +'">' + tipos[i].nome + '</a> | ')
                                     }
                                 }
                             }
@@ -136,55 +138,45 @@
             </fieldset>
         </section>
         <!-- Formulário de testes -->
-        <!-- 
-        <form action="/filtrarpost" method="POST"> 
+        <!-- <form action="/filtrarpost" method="POST"> 
             <?php echo csrf_field(); ?>                    
             <input type="text" name="instituicao_id">
             <input type="text" name="ano">
             <input type="text" name="tipo_id">
             <button type="submit">Enviar</button>
-        </form>
-        -->   
+        </form> -->
     </body>
 <script>
-/*
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
         
-    document.querySelectorAll('#anos_index a').forEach(function(link) {
         $('#anos').on('click', '#anos_index a', function(event){
             event.preventDefault();
-
-        var filtro = {
-            instituicao_id :    $(this).attr('instituicao_attr'),
-            ano :               $(this).attr('ano_attr'),
-            tipo_id :           $(this).attr('tipo_attr'),
-        }
-
-        console.log(filtro)
-        
-        tipo_selecionado = $(this).attr('tipo_attr')
-
-        $.ajax({ 
-            url: "/filtrarpost",
-            type: "post",
-            data: filtro,
-            dataType: "json",
-            success: function (response) 
-            {
-                console.log(response)
-                tipos_update(response)
-                editais_update(response)
-
+            var filtro = {
+                instituicao_id :    $(this).attr('instituicao_attr'),
+                ano :               $(this).attr('ano_attr'),
+                tipo_id :           tipo_selecionado,
             }
             
+            ano_selecionado = $(this).attr('ano_attr') 
+
+            $.ajax({ 
+                url: "/filtrarpost",
+                type: "post",
+                data: filtro,
+                dataType: "json",
+                success: function (response) 
+                {
+                    anos_update(response.instituicao_selecionada, response.ano_selecionado, response.anos)
+                    tipos_update(response.tipos, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
+                    editais_update(response.editais, response.editais_com_anexo, response.anexos)
+                }
+                
+            })
         })
-    })
-})
-*/
 </script>
 <script>
         $.ajaxSetup({
@@ -192,8 +184,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        
-    document.querySelectorAll('#tipos_index a').forEach(function(link) {
         
         // $('#ocultaLancamento').on('click', function()
         // $(link).on('click', function(event))
@@ -205,11 +195,7 @@
             instituicao_id :    $(this).attr('instituicao_attr'),
             ano :               $(this).attr('ano_attr'),
             tipo_id :           $(this).attr('tipo_attr'),
-        }
-
-        console.log(filtro)
-        
-        tipo_selecionado = $(this).attr('tipo_attr')
+        }        
 
         $.ajax({ 
             url: "/filtrarpost",
@@ -218,15 +204,87 @@
             dataType: "json",
             success: function (response) 
             {
-                console.log(response)
-                tipos_update(response)
-                editais_update(response)
-
+                tipos_update(response.tipos, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
+                editais_update(response.editais, response.editais_com_anexo, response.anexos)
             }
             
         })
     })
-})
+</script>
+<script>
+    function anos_update(instituicao_selecionada_local, ano_selecionado_local, anos_local){
+        $('#legenda_editais').remove()
+        $('#ano_titulo_aux').append('<legend id="legenda_editais">EDITAIS ' + ano_selecionado_local + '</legend>')
+        $('#anos_index').remove()
+        $('#anos').append('<div id="anos_index">')
+        for(i=0; i<anos_local.length; i++){
+            if(anos_local[i].ano == ano_selecionado_local){
+                if(i == (anos_local.length - 1)){
+                    $('#anos_index').append(anos_local[i].ano)
+                }
+                else{
+                    $('#anos_index').append(anos_local[i].ano + ' | ')
+                }
+            }
+            else{
+                if(i == (anos_local.length - 1)){
+                    $('#anos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada_local + '" ano_attr = "' + anos_local[i].ano +'">' + anos_local[i].ano + '</a>');
+                }
+                else{
+                    $('#anos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada_local + '" ano_attr = "' + anos_local[i].ano +'">' + anos_local[i].ano + '</a> | ');
+                }
+            }
+        }
+        ano_selecionado =  ano_selecionado_local
+        $('#anos').append('</div>')
+    }
+</script>
+<script>
+    function tipos_update(tipos_local, instituicao_selecionada_local, ano_selecionado_local, tipo_selecionado_local){
+        $('#tipos_index').remove()
+        $('#tipos').append('<div id="tipos_index">')
+        for(i=0; i < tipos_local.length; i++){
+            if(tipos_local[i].id == tipo_selecionado_local){
+                if(i == (tipos_local.length - 1)){
+                    $('#tipos_index').append(tipos_local[i].nome)
+                }
+                else{
+                    $('#tipos_index').append(tipos_local[i].nome + ' | ')
+                }
+            }
+            else{
+                if(i == (tipos_local.length - 1)){
+                    $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada_local + '" ano_attr = "' + ano_selecionado_local +'" tipo_attr = "' + tipos_local[i].id +'">' + tipos_local[i].nome + '</a>')
+                }
+                else{
+                    $('#tipos_index').append('<a href="" instituicao_attr="' + instituicao_selecionada_local + '" ano_attr = "' + ano_selecionado_local +'" tipo_attr = "' + tipos_local[i].id +'">' + tipos_local[i].nome + '</a> | ')
+                }
+            }
+        }
+        tipo_selecionado = tipo_selecionado_local
+        $('#tipos').append('</div>')
+        
+    }
+</script>
+<script>
+    function editais_update(editais_local, editais_com_anexo_local, anexos_local){
+        $('#editais_index').remove()
+        $('#editais').append('<div id="editais_index">')
+        for(i = 0; i < editais_local.length; i++){
+            $('#editais_index').append('<a href="#">' + editais_local[i].nome + '</a><br>')
+            for(j = 0; j < editais_com_anexo_local.length; j++){
+                if(editais_local[i].id == editais_com_anexo_local[j]){
+                    for(k = 0; k < anexos_local.length; k++){
+                        if(editais_local[i].id == anexos_local[k].pai_id){
+                        $('#editais_index').append('<i class="fa fa-arrow-right" aria-hidden="true"></i>') 
+                        $('#editais_index').append('<a href="#">' + anexos_local[k].nome + '</a><br>') 
+                        }
+                    }
+                }
+            }
+        }
+        $('#editais').append('</div>')
+    }
 </script>
 <script>
     /*
@@ -245,8 +303,6 @@
             ano :               $(this).attr('ano_attr'),
             tipo_id :           $(this).attr('tipo_attr'),
         }
-
-        console.log(filtro)
         
         instituicao_selecionada = $(this).attr('instituicao_attr')
         $.ajax({ 
@@ -256,7 +312,6 @@
             dataType: "json",
             success: function (response) 
             {
-                console.log(response)
                 $('#instituicoes_index').remove()
                 $('#instituicoes').append('<div id="instituicoes_index">')
                 for(var i =0; i<response.instituicoes.length; i++){
@@ -284,53 +339,5 @@
         }
     })
     */
-</script>
-<script>
-    function editais_update(response){
-        $('#editais_index').remove()
-        $('#editais').append('<div id="editais_index">')
-        for(i = 0; i < response.editais.length; i++){
-            $('#editais_index').append('<a href="#">' + response.editais[i].nome + '</a><br>')
-            for(j = 0; j < response.editais_com_anexo.length; j++){
-                if(response.editais[i].id == response.editais_com_anexo[j]){
-                    for(k = 0; k < response.anexos.length; k++){
-                        if(response.editais[i].id == response.anexos[k].pai_id){
-                        $('#editais_index').append('<i class="fa fa-arrow-right" aria-hidden="true"></i>') 
-                        $('#editais_index').append('<a href="#">' + response.anexos[k].nome + '</a><br>') 
-                        }
-                    }
-                }
-            }
-        }
-        $('#editais').append('</div>')
-    }
-</script>
-
-<script>
-    function tipos_update(response){
-        $('#tipos_index').remove()
-        $('#tipos').append('<div id="tipos_index">')
-        for(i=0; i < response.tipos.length; i++){
-            if(response.tipos[i].id == response.tipo_selecionado){
-                if(i == (response.tipos.length - 1)){
-                    $('#tipos_index').append(response.tipos[i].nome)
-                }
-                else{
-                    $('#tipos_index').append(response.tipos[i].nome + ' | ')
-                }
-            }
-            else{
-                if(i == (response.tipos.length - 1)){
-                    $('#tipos_index').append('<a href="" instituicao_attr="' + response.instituicao_selecionada + '" ano_attr = "' + response.ano_selecionado +'" tipo_attr = "' + response.tipos[i].id +'" value="' + response.tipos[i].id + '">' + response.tipos[i].nome + '</a>')
-                }
-                else{
-                    $('#tipos_index').append('<a href="" instituicao_attr="' + response.instituicao_selecionada + '" ano_attr = "' + response.ano_selecionado +'" tipo_attr = "' + response.tipos[i].id +'" value="' + response.tipos[i].id + '">' + response.tipos[i].nome + '</a> | ')
-                }
-            }
-        }
-        tipo_selecionado = response.tipo_selecionado
-        $('#tipos').append('</div>')
-        
-    }
 </script>
 </html>
