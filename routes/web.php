@@ -12,7 +12,9 @@ Route::get('/filtrar/{instituicao_selecionada}/{ano_selecionado}/{tipo_id}', ['u
 * uma chamada post ao invés de usar uma rota get. Não pode ser utilizada a mesma rota utilizada sem a requisição ajax
 * pois ela retorna uma view. Precisamos de uma função que retorne somente o objeto em json.
 */
-Route::post('/filtrarpost',         ['uses' => 'EditalsController@filtrarPost',     'as' =>'editais.filtrarPost']); 
+Route::post('/filtrarpost',         ['uses' => 'EditalsController@filtrarPost',         'as' =>'editais.filtrarPost']); 
+
+Route::post('/filtrar_instituicao',  ['uses' => 'EditalsController@filtrarInstituicao',  'as' =>'editais.filtrar_instituicao']); 
 
 Route::group(['middleware' => 'autenticar.login'], function() {
     

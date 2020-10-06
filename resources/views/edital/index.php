@@ -41,6 +41,22 @@
     <section class="sectionmain" id="view-conteudo">
         <div id="instituicoes">
             <div id="instituicoes_index">
+                <form action="/filtrar_instituicao" method= "post">
+                    <?php echo csrf_field(); ?>
+                    <b>Instituição / Orgão:</b>
+                    <select id="instituicoes_select" name= "instituicao_id_filtro" onchange="this.form.submit()" style="width: 400px">
+                        <script>
+                        for(var i=0; i<instituicoes.length; i++){
+                            if(instituicoes[i].id == instituicao_selecionada){
+                                $('#instituicoes_select').append('<option selected= "selected" value="' + instituicoes[i].id + '" onchange="this.form.submit()">' + instituicoes[i].nome + '</option>')
+                            }
+                            else{
+                            $('#instituicoes_select').append('<option value="' + instituicoes[i].id + '" onchange="this.form.submit()">' + instituicoes[i].nome + '</option>')
+                            }
+                        }
+                        </script>
+                    </select>   
+                </form>
                 <script>
                     for(var i=0; i<instituicoes.length; i++){
                         if(instituicoes[i].id == instituicao_selecionada){

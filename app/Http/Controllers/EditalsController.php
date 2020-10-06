@@ -146,6 +146,33 @@ class EditalsController extends Controller
         return;
     }
 
+    public function filtrarInstituicao(Request $request)
+    {
+        $anos               = $this->service->ordenaAnoPorInstituicao($request->get('instituicao_id_filtro')); 
+        if(!isset($anos[0])){
+            return abort(404);
+        }
+        $ano_selecionado    = $anos[(sizeof($anos) -1)]->ano;   //é selecionado o último ano daquela instituicao
+        $tipos              = $this->service->tiposSelecionados($request->get('instituicao_id_filtro'), $ano_selecionado);
+        $tipo_selecionado   = $tipos[0]->id;    //a página exibirá o primeiro tipo disponível daquele ano
+        
+        $editais            = $this->service->filtrar($request->get('instituicao_id_filtro'), $ano_selecionado, $tipo_selecionado);
+        $anexos             = $this->service->anexos($request->get('instituicao_id_filtro'), $ano_selecionado, $tipo_selecionado);
+        $editais_com_anexo  = $this->service->editaisComAnexo($request->get('instituicao_id_filtro'), $ano_selecionado, $tipo_selecionado);
+        $instituicoes       = $this->service->instituicoes();   
+        
+        return view('edital.index',[
+            'instituicoes'              => $instituicoes,
+            'anos'                      => $anos,
+            'tipos'                     => $tipos,
+            'instituicao_selecionada'   => $request->get('instituicao_id_filtro'),
+            'ano_selecionado'           => $ano_selecionado,
+            'tipo_selecionado'          => $tipo_selecionado,
+            'editais'                   => $editais,
+            'editais_com_anexo'         => json_encode($editais_com_anexo),
+            'anexos'                    => $anexos,
+        ]);
+    }
     
     public function filtrarPost(Request $request)
     {
@@ -158,7 +185,7 @@ class EditalsController extends Controller
         
         if(!(isset($editais[0]))){  //não existe nenhum edital com os filtros recebidos (instituicao, ano e tipo)
             if(isset($tipos[0])){   //existe algum tipo no ano recebido (instituicao, ano)
-                $tipo_id            = $tipos[0]->id;    //a página exibira o primeiro tipo disponível daquele ano
+                $tipo_id            = $tipos[0]->id;    //a página exibirá o primeiro tipo disponível daquele ano
                 $tipo_selecionado   = $tipo_id;
 
                 $editais            = $this->service->filtrar($request->get('instituicao_id'), $request->get('ano'), $tipo_id);
