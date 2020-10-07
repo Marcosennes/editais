@@ -57,7 +57,7 @@
                         </script>
                     </select>   
                 </form>
-                <script>
+                <!-- <script>
                     for(var i=0; i<instituicoes.length; i++){
                         if(instituicoes[i].id == instituicao_selecionada){
                             if(i == (instituicoes.length - 1)){
@@ -76,7 +76,7 @@
                             }
                         }
                     }
-                </script>
+                </script> -->
             </div>
         </div>
         <br><em><strong>Recomendamos o uso dos navegadores <span style="color: #ff0000;">Mozilla Firefox <span style="color: #000000;">ou</span> Google Chrome.</span></strong></em>
@@ -301,50 +301,6 @@
         }
         $('#editais').append('</div>')
     }
-</script>
-<script>
-    /*
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        
-    document.querySelectorAll('#instituicoes_index a').forEach(function(link) {
-        link.onclick = function(event){
-            event.preventDefault();
-
-        var filtro = {
-            instituicao_id :    $(this).attr('instituicao_attr'),
-            ano :               $(this).attr('ano_attr'),
-            tipo_id :           $(this).attr('tipo_attr'),
-        }
-        
-        instituicao_selecionada = $(this).attr('instituicao_attr')
-        $.ajax({ 
-            url: "/filtrarpost",
-            type: "post",
-            data: filtro,
-            dataType: "json",
-            success: function (response) 
-            {
-                $('#instituicoes_index').remove()
-                $('#instituicoes').append('<div id="instituicoes_index">')
-                for(var i =0; i<response.instituicoes.length; i++){
-                    if(response.instituicoes[i].id == instituicao_selecionada){
-                        $('#instituicoes_index').append(response.instituicoes[i].nome + ' |')
-                    }
-                    else{
-                        $('#instituicoes_index').append('<a href="/filtrar/' + instituicoes[i].id + '/' + ano_selecionado + '/' + tipo_selecionado + '">' + response.instituicoes[i].nome + '</a> |');
-                    }
-                }
-                $('#instituicoes').append('</div>')
-            }
-            
-        })
-    }
-})
-*/
 </script>
 <script>
     /*

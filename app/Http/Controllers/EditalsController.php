@@ -38,7 +38,7 @@ class EditalsController extends Controller
             'tipos'                     => $tipos,
             'instituicao_selecionada'   => 1,
             'ano_selecionado'           => $ano_selecionado,
-            'tipo_selecionado'          => $tipos[0]->id,
+            'tipo_selecionado'          => $tipos[0]->id,   //Seleciona o primeiro tipo disponível
             'editais'                   => $editais,
             'editais_com_anexo'         => json_encode($editais_com_anexo),
             'anexos'                    => $anexos,
@@ -86,7 +86,8 @@ class EditalsController extends Controller
             'resposta' => $resposta,
         ]);
     }
-
+        //função filtrarPost é similar mas utilizando o método Post. A função filtrar não está sendo utilizada  
+    /*
     public function filtrar($instituicao_id, $ano, $tipo_id)
     {
         $editais            = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
@@ -104,11 +105,9 @@ class EditalsController extends Controller
                 $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);        
             }
             else if(isset($anos[0])){   //existe pelo menos um ano na instituicao recebida
-
                 $ano                = $anos[(sizeof($anos) -1)]->ano;   //é selecionado o último ano daquela instituicao
                 $tipos              = $this->service->tiposSelecionados($instituicao_id, $ano);
                 $tipo_id            = $tipos[0]->id;
-
                 $editais            = $this->service->filtrar($instituicao_id, $ano, $tipo_id);
                 $anexos             = $this->service->anexos($instituicao_id, $ano, $tipo_id);
                 $editais_com_anexo  = $this->service->editaisComAnexo($instituicao_id, $ano, $tipo_id);        
@@ -117,12 +116,10 @@ class EditalsController extends Controller
                 return abort(404);  
             }
         }
-
-        /*
-            $json = json_enconde($produtos);
-            return response()->json($json);
-        */
-
+ 
+            // $json = json_enconde($produtos);
+            // return response()->json($json);
+ 
         // O próprio Laravel já retorna em json
         return view('edital.index',[
             'instituicoes'              => $instituicoes,
@@ -136,6 +133,7 @@ class EditalsController extends Controller
             'anexos'                    => $anexos,
         ]);
     }
+    */
 
     public function filtrarAnexo(Request $request)
     {
@@ -145,7 +143,8 @@ class EditalsController extends Controller
         echo json_encode($editais);
         return;
     }
-
+    //função utilizada no select de instituição da index. A diferença é que esta recebe somente a instituicao
+    //Além disso, ela retorna a view pois não é uma requisição ajax
     public function filtrarInstituicao(Request $request)
     {
         $anos               = $this->service->ordenaAnoPorInstituicao($request->get('instituicao_id_filtro')); 
@@ -174,6 +173,8 @@ class EditalsController extends Controller
         ]);
     }
     
+    //função utilizada para filtrar por instituicao, ano e tipo
+    //retorna um json para a requisição ajax
     public function filtrarPost(Request $request)
     {
         $editais            = $this->service->filtrar($request->get('instituicao_id'), $request->get('ano'), $request->get('tipo_id'));

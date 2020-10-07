@@ -89,7 +89,8 @@ class EditalService extends EditalClass{
         }
     }
 
-    public function anexos($instituicao_id, $ano, $tipo_id) //retorna os anexos de um edital
+    //retorna os anexos de um edital
+    public function anexos($instituicao_id, $ano, $tipo_id) 
     {
         $anexos = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
                              ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
@@ -102,7 +103,8 @@ class EditalService extends EditalClass{
         return $anexos;
     }
 
-    public function editaisComAnexo($instituicao_id, $ano, $tipo_id)    //retorna um vetor com o id de todos os editais com anexo
+    //retorna um vetor com o id de todos os editais com anexo
+    public function editaisComAnexo($instituicao_id, $ano, $tipo_id)
     {
         $editais_com_anexo = EditalFilho::join('editals','edital_filhos.pai_id', '=', 'editals.id')
                                         ->select('pai_id', 'instituicao_id', 'ano', 'tipo_id')
@@ -186,7 +188,7 @@ class EditalService extends EditalClass{
 
         return $tipos;
     }
-
+    //retorna os tipos de uma instituição em um ano específico
     public function tiposSelecionados($instituicao_id, $ano)
     {
         $tipos = EditalTipo::join('editals', 'edital_tipos.id', '=', 'editals.tipo_id')
@@ -211,6 +213,7 @@ class EditalService extends EditalClass{
         return $editaisFiltrados;
     }
 
+    //retorna o maior ano de um vetor de anos recebidos
     public function maiorAno($anos){
 
         $ano_selecionado = $anos[0]->ano;
