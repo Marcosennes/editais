@@ -77,14 +77,21 @@ class EditalsController extends Controller
         
         session_start();
 
-        $_SESSION['cadastro']['mensagem']   = $resposta['mensagem'];
         $_SESSION['cadastro']['validacao']  = $resposta['validacao'];
+        $_SESSION['cadastro']['mensagem']   = $resposta['mensagem'];
         
         
-        return redirect()->route('edital.cadastrar', [
+        return redirect()->route('edital.cadastrar');
+    }
 
-            'resposta' => $resposta,
-        ]);
+    public function excluir(Request $request)
+    {
+        $resposta = $this->service->excluir($request->get('id'));
+
+        $_SESSION['exclusao_edital']['validacao']  = $resposta['validacao'];
+        $_SESSION['exclusao_edital']['mensagem']   = $resposta['mensagem'];
+
+        return redirect()->route('edital.cadastrar');
     }
         //função filtrarPost é similar mas utilizando o método Post. A função filtrar não está sendo utilizada  
     /*

@@ -89,6 +89,15 @@ class EditalService extends EditalClass{
         }
     }
 
+    public function excluir($edital_id)
+    {
+        $this->repository->delete($edital_id);
+
+        return [
+            'validacao'   => 'true',
+            'mensagem'  => "Edital excluído",
+        ];
+    }
     //retorna os anexos de um edital
     public function anexos($instituicao_id, $ano, $tipo_id) 
     {

@@ -142,7 +142,7 @@
                                             style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
                                             type="submit">Filtrar</button>
                                     </form>
-                                    <form method="post" action="">
+                                    <form method="post" action="/exclui_edital">
                                     <?php echo csrf_field(); ?>
                                     <div class="d-none" id="editalTable">
                                         <div class="table-overflow"
@@ -167,15 +167,15 @@
                                     </div>
                                     </form>
                                     <?php 
-            if(isset($_SESSION['cadastro_anexo'])){
-                if($_SESSION['cadastro_anexo']['validacao'] == true){
-                    echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro_anexo']['mensagem'] . '</div>';
+            if(isset($_SESSION['exclusao_edital'])){
+                if($_SESSION['exclusao_edital']['validacao'] == true){
+                    echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
                 }
-                elseif($_SESSION['cadastro_anexo']['validacao'] == false){
-                    echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro_anexo']['mensagem'] . '</div>';
+                elseif($_SESSION['exclusao_edital']['validacao'] == false){
+                    echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
                 }
 
-                unset($_SESSION['cadastro_anexo']);
+                unset($_SESSION['exclusao_edital']);
             }
         ?>
                                 </div>
@@ -297,7 +297,7 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $('#tableEdital').append('<tbody id = "bodyEditalTable"></tbody>');
             $.each(response, function(index, edital) {
                 $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
-                    edital.ano + '</td><td><input type="radio" name="pai_id" value="' +
+                    edital.ano + '</td><td><input type="radio" name="id" value="' +
                     edital.id + '"><br></td></tr>');
             });
         }

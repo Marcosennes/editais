@@ -19,7 +19,7 @@ abstract class EditalClass{
 
     public function verificaArquivo($arquivo, $arquivo_nome)
     {
-        if($arquivo == null)
+        if($arquivo == null || $arquivo == "")
         {
             return['mensagem'  => "Campo do arquivo não pode ser vazio", 'validacao' => false];
         }
