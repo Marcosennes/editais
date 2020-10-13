@@ -1,0 +1,22 @@
+#card {
+    border-radius: 10px;
+}
+
+#conteudo-card {
+    padding: 30px 60px;
+    /* border: 10px white solid; */
+    border-radius: 10px;
+    background-color: white;
+}
+
+.container {
+    background-color: white;
+}
+
+body {
+    background-color: #fbf4f9;
+}
+
+.card-body {
+    text-align: left !important;
+}

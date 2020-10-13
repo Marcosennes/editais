@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\EditalFilho;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Edital extends Model implements Transformable
 {
     use TransformableTrait;
+    use SoftDeletes;
 
     protected $table = 'editals';
     protected $fillable = [
@@ -20,6 +22,8 @@ class Edital extends Model implements Transformable
         'tipo_id',
         'instituicao_id',
     ];
+
+    protected $dates = ['deleted_at'];
 
     protected $hidden = [
         

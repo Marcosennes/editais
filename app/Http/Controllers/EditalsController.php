@@ -143,6 +143,7 @@ class EditalsController extends Controller
         echo json_encode($editais);
         return;
     }
+    
     //função utilizada no select de instituição da index. A diferença é que esta recebe somente a instituicao
     //Além disso, ela retorna a view pois não é uma requisição ajax
     public function filtrarInstituicao(Request $request)
