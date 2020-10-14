@@ -19,11 +19,13 @@ Route::post('/filtrar_instituicao',  ['uses' => 'EditalsController@filtrarInstit
 Route::group(['middleware' => 'autenticar.login'], function() {
     
     //Rotas somente para usuários logados
-    Route::get('/cadastrar',            ['uses' => 'EditalsController@cadastrar',       'as' => 'edital.cadastrar']);
-    Route::post('/salva_edital',        ['uses' => 'EditalsController@salvar',          'as' => 'edital.salvar']);
-    Route::post('/exclui_edital',       ['uses' => 'EditalsController@excluir',          'as' => 'edital.excluir']);
-    Route::post('/salva_edital_anexo',  ['uses' => 'EditalFilhosController@salvar',     'as' => 'editalAnexo.salvar']);
-    Route::post('/filtrarAnexo',        ['uses' => 'EditalsController@filtrarAnexo',    'as' => 'edital.filtrarAnexo']);
+    Route::get('/cadastrar',            ['uses' => 'EditalsController@cadastrar',           'as' => 'edital.cadastrar']);
+    Route::get('/cadastrar_anexo',      ['uses' => 'EditalsController@cadastrarAnexo',      'as' => 'edital.cadastrarAnexo']);
+    Route::post('/salva_edital',        ['uses' => 'EditalsController@salvar',              'as' => 'edital.salvar']);
+    Route::post('/exclui_edital',       ['uses' => 'EditalsController@excluir',             'as' => 'edital.excluir']);
+    Route::post('/salva_edital_anexo',  ['uses' => 'EditalFilhosController@salvar',         'as' => 'editalAnexo.salvar']);
+    Route::post('/filtrarEdital',       ['uses' => 'EditalsController@filtrarEdital',       'as' => 'edital.filtrarEdital']);
+    Route::post('/filtrarAnexo',        ['uses' => 'EditalFilhosController@filtrarAnexo',   'as' => 'editalFilhos.filtrarAnexo']);
 
     /*
     //Rota para registrar novo usuário com privilégios. Se desativada a inserção de novos usuários deve ser realizada direto do banco de dados

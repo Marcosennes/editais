@@ -29,6 +29,14 @@ class EditalFilhosController extends Controller
         $_SESSION['cadastro_anexo']['validacao']  = $resposta['validacao'];
         $_SESSION['cadastro_anexo']['mensagem']   = $resposta['mensagem'];
         
-        return redirect()->route('edital.cadastrar');
+        return redirect()->route('edital.cadastrarAnexo');
+    }
+
+    public function filtrarAnexo(Request $request)
+    {
+        $editais = $this->service->filtrarAnexo($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
+        
+        echo json_encode($editais);
+        return;
     }
 }

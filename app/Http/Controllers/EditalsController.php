@@ -64,6 +64,26 @@ class EditalsController extends Controller
         ]);
     }
 
+    public function cadastrarAnexo()
+    {
+        $instituicoes                       = $this->service->instituicoes();
+        $anos                               = $this->service->ordenaAno();
+        $anos_tipos_instituicoes            = array();
+        $tipos                              = $this->service->tipos();
+
+        for($i = 0; $i < sizeof($instituicoes); $i++){
+            $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
+        }
+        
+        return view('edital.cadastrar_anexo',[
+            'anos'                      => $anos,
+            'anos_tipos_instituicoes'   => $anos_tipos_instituicoes,
+            'tipos'                     => $tipos,
+            'instituicoes'              => $instituicoes,
+        ]);
+    }
+
+
     public function salvar(editalCreateRequest $request)
     {
         $resposta = $this->service->salvar($request);
@@ -144,9 +164,8 @@ class EditalsController extends Controller
     }
     */
 
-    public function filtrarAnexo(Request $request)
+    public function filtrarEdital(Request $request)
     {
-
         $editais = $this->service->filtrar($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
         
         echo json_encode($editais);
