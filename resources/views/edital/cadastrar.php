@@ -36,7 +36,7 @@
         <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
             <div class="container">
                 <div style="padding:50px;" class="row d-flex flex-column">
-                    <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a>
+                    <!-- <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a> -->
                     <div id="card">
                         <div id="conteudo-card">
                             <div class="card text-center">
@@ -87,19 +87,6 @@
                                         <button class="btn btn-primary" style="width: 100%; margin-top: 11px;"
                                             type="submit">Cadastrar</button>
                                     </form>
-                                    <?php 
-                    session_start();
-                    if(isset($_SESSION['cadastro'])){
-                        if($_SESSION['cadastro']['validacao'] == true){
-                            echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
-                        }
-                        elseif($_SESSION['cadastro']['validacao'] == false){
-                            echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
-                        }
-                        
-                        unset($_SESSION['cadastro']);
-                    }
-                    ?>
                                 </div>
                                 <div id="excluir-body" class="card-body" style="display: none;">
                                     <form name="formFiltraEdital">
@@ -166,22 +153,35 @@
                                             type="submit">Excluir</button>
                                     </div>
                                     </form>
-                                    <?php 
-            if(isset($_SESSION['exclusao_edital'])){
-                if($_SESSION['exclusao_edital']['validacao'] == true){
-                    echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
-                }
-                elseif($_SESSION['exclusao_edital']['validacao'] == false){
-                    echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
-                }
-
-                unset($_SESSION['exclusao_edital']);
-            }
-        ?>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <?php 
+                        session_start();
+                        if(isset($_SESSION['cadastro'])){
+                            if($_SESSION['cadastro']['validacao'] == true){
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['cadastro']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
+                            }
+                            
+                            unset($_SESSION['cadastro']);
+                        }
+                    ?>
+                    <?php 
+                        if(isset($_SESSION['exclusao_edital'])){
+                            if($_SESSION['exclusao_edital']['validacao'] == true){
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['exclusao_edital']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
+                            }
+                            
+                            unset($_SESSION['exclusao_edital']);
+                        }
+                    ?>
                     <h3 style="margin-top: 40px;">Cadastrar anexo</h3>
                     <form name="formFiltraAnexo">
                         <?php echo csrf_field(); ?>

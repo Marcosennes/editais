@@ -88,6 +88,8 @@ class EditalsController extends Controller
     {
         $resposta = $this->service->excluir($request->get('id'));
 
+        session_start();
+
         $_SESSION['exclusao_edital']['validacao']  = $resposta['validacao'];
         $_SESSION['exclusao_edital']['mensagem']   = $resposta['mensagem'];
 
