@@ -254,7 +254,7 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $('#tableEdital').append('<tbody id = "bodyEditalTable"></tbody>');
             $.each(response, function(index, edital) {
                 $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
-                    edital.ano + '</td><td><input type="radio" name="id" value="' +
+                    edital.ano + '</td><td><input type="radio" name="pai_id" value="' +
                     edital.id + '"><br></td></tr>');
             });
         }
