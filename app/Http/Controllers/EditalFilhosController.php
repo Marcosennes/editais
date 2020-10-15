@@ -32,10 +32,21 @@ class EditalFilhosController extends Controller
         return redirect()->route('edital.cadastrarAnexo');
     }
 
+    public function excluir(Request $request)
+    {
+        $resposta = $this->service->excluir($request->get('id'));
+
+        session_start();
+
+        $_SESSION['exclusao_anexo']['validacao']  = $resposta['validacao'];
+        $_SESSION['exclusao_anexo']['mensagem']   = $resposta['mensagem'];
+
+        return redirect()->route('edital.cadastrarAnexo');
+    }
+
     public function filtrarAnexo(Request $request)
     {
         $editais = $this->service->filtrarAnexo($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));
-        
         echo json_encode($editais);
         return;
     }

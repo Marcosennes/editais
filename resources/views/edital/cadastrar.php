@@ -40,7 +40,6 @@
             <div class="container">
                 <div id="coluna-principal" class="row d-flex flex-column">
                     <!-- <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a> -->
-                    <h1>Cadastrar edital</h1>
                     <?php 
                         if(isset($_SESSION['cadastro'])){
                             if($_SESSION['cadastro']['validacao'] == true){
@@ -81,6 +80,7 @@
                                 <div id="cadastrar-body" class="card-body">
                                     <form method="post" action="/salva_edital" enctype="multipart/form-data">
                                         <?php echo csrf_field(); ?>
+                                        <h1>Cadastrar edital</h1>
                                         <label for="instituicao">Instituição</label>
                                         <select id="instituicoes_select" name="instituicao_id" class="form-control">
                                             <script>
@@ -118,6 +118,7 @@
                                 <div id="excluir-body" class="card-body" style="display: none;">
                                     <form name="formFiltraEdital">
                                         <?php echo csrf_field(); ?>
+                                        <h1>Excluir edital</h1>
                                         <label for="instituicao">Instituição</label>
                                         <select id="instituicoes_edital_select" name="instituicao_id"
                                             class="form-control">

@@ -23,6 +23,7 @@ Route::group(['middleware' => 'autenticar.login'], function() {
     Route::get('/cadastrar_anexo',      ['uses' => 'EditalsController@cadastrarAnexo',      'as' => 'edital.cadastrarAnexo']);
     Route::post('/salva_edital',        ['uses' => 'EditalsController@salvar',              'as' => 'edital.salvar']);
     Route::post('/exclui_edital',       ['uses' => 'EditalsController@excluir',             'as' => 'edital.excluir']);
+    Route::post('/exclui_anexo',        ['uses' => 'EditalFilhosController@excluir',        'as' => 'editalFilhos.excluir']);
     Route::post('/salva_edital_anexo',  ['uses' => 'EditalFilhosController@salvar',         'as' => 'editalAnexo.salvar']);
     Route::post('/filtrarEdital',       ['uses' => 'EditalsController@filtrarEdital',       'as' => 'edital.filtrarEdital']);
     Route::post('/filtrarAnexo',        ['uses' => 'EditalFilhosController@filtrarAnexo',   'as' => 'editalFilhos.filtrarAnexo']);

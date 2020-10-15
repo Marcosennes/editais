@@ -8,6 +8,7 @@ use App\Entities\EditalTipo;
 use App\Entities\Instituicao;
 use App\Repositories\EditalRepository;
 use App\Validators\EditalValidator;
+use App\Repositories\EditalFilhoRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Prettus\Validator\Contracts\ValidatorInterface;
@@ -21,10 +22,11 @@ class EditalService extends EditalClass{
     private $repository;
     private $validator;
 
-    public function __construct(EditalRepository $repository,EditalValidator $validator)
+    public function __construct(EditalRepository $repository,EditalValidator $validator, EditalFilhoRepository $anexo_repository)
     {
         $this->repository = $repository;
         $this->validator = $validator;
+        $this->anexo_repository = $anexo_repository;
     }
 
     public function salvar($data)
@@ -91,11 +93,37 @@ class EditalService extends EditalClass{
 
     public function excluir($edital_id)
     {
-        $this->repository->delete($edital_id);
+        $possui_anexo = EditalFilho::where('pai_id', '=', $edital_id)
+                                    ->select('id')
+                                    ->get();
+        
+        if(is_null($possui_anexo) || $possui_anexo->count() == 0)
+        {
+            $this->repository->delete($edital_id);
+
+            return [
+                'validacao' => 'true',
+                'mensagem'  => "Edital excluído",
+            ];
+        }    
+        else
+        {
+            foreach($possui_anexo as $anexo)
+            {
+                $this->anexo_repository->delete($anexo["id"]);
+            }
+
+            $this->repository->delete($edital_id);
+
+            return [
+                'validacao' => 'true',
+                'mensagem'  => "Edital e anexos excluídos",
+            ];
+        }
 
         return [
-            'validacao'   => 'true',
-            'mensagem'  => "Edital excluído",
+            'validacao' => 'false',
+            'mensagem'  => "O Edital não foi excluído",
         ];
     }
     //retorna os anexos de um edital

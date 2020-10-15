@@ -37,7 +37,6 @@
         <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
             <div class="container">
                 <div id="coluna-principal" class="row d-flex flex-column">
-                    <h1>Cadastrar anexo</h1>
                     <?php 
                         if(isset($_SESSION['cadastro_anexo'])){
                             if($_SESSION['cadastro_anexo']['validacao'] == true){
@@ -48,6 +47,17 @@
                             }
                             
                             unset($_SESSION['cadastro_anexo']);
+                        }
+
+                        if(isset($_SESSION['exclusao_anexo'])){
+                            if($_SESSION['exclusao_anexo']['validacao'] == true){
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_anexo']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['exclusao_anexo']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_anexo']['mensagem'] . '</div>';
+                            }
+                            
+                            unset($_SESSION['exclusao_anexo']);
                         }
                     ?>
                     <div id="card">
@@ -66,6 +76,7 @@
                                 <div id="cadastrar-body" class="card-body">
                                     <form name="formFiltraEdital">
                                         <?php echo csrf_field(); ?>
+                                        <h1>Cadastrar anexo</h1>
                                         <label for="instituicao">Instituição</label>
                                         <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
                                             <script>
@@ -127,6 +138,7 @@
                                 <div id="excluir-body" class="card-body" style="display: none;">
                                     <form name="formFiltraAnexo">
                                         <?php echo csrf_field(); ?>
+                                        <h1>Excluir anexo</h1>
                                         <label for="instituicao">Instituição</label>
                                         <select id="instituicoes_edital_select" name="instituicao_id"
                                             class="form-control">
@@ -165,7 +177,7 @@
                                             style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
                                             type="submit">Filtrar</button>
                                     </form>
-                                    <form method="post" action="/exclui_edital">
+                                    <form method="post" action="/exclui_anexo">
                                     <?php echo csrf_field(); ?>
                                     <div class="d-none" id="anexoTable">
                                         <div class="table-overflow"

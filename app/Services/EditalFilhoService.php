@@ -86,15 +86,26 @@ class EditalFilhoService extends EditalClass{
             return['mensagem'  => "O anexo deve pertencer a um edital.", 'validacao' => false];                
         }
     }
+
+    public function excluir($edital_id)
+    {
+        $this->repository->delete($edital_id);
+
+        return [
+            'validacao' => 'true',
+            'mensagem'  => "Anexo excluído",
+        ];
+    }
+
     public function filtrarAnexo($instituicao_id, $ano, $tipo_id)
     {
-        $anexosFiltrados = Edital::where('instituicao_id', '=', $instituicao_id)
-                                  ->where('ano','=',$ano)
-                                  ->where('tipo_id','=',$tipo_id)
-                                  ->join('edital_filhos', 'editals.id', '=', 'edital_filhos.pai_id')
-                                  ->select('edital_filhos.id', 'edital_filhos.nome', 'ano')
-                                  ->get();
-
+        $anexosFiltrados = EditalFilho::join('editals', 'editals.id', '=', 'edital_filhos.pai_id')
+                                         ->select('edital_filhos.id', 'edital_filhos.nome', 'ano', 'instituicao_id', 'tipo_id') 
+                                         ->where('instituicao_id', '=', $instituicao_id)
+                                         ->where('ano','=',$ano)
+                                         ->where('tipo_id','=',$tipo_id)
+                                         ->select('edital_filhos.id', 'edital_filhos.nome', 'ano')
+                                         ->get();
         return $anexosFiltrados;
     }
 }
