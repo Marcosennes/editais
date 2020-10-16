@@ -229,9 +229,9 @@ class EditalService extends EditalClass{
     public function tiposSelecionados($instituicao_id, $ano)
     {
         $tipos = EditalTipo::join('editals', 'edital_tipos.id', '=', 'editals.tipo_id')
-                            ->select('edital_tipos.id','editals.instituicao_id', 'editals.ano', 'edital_tipos.nome')
                             ->where('instituicao_id', '=', $instituicao_id)
                             ->where('ano', '=', $ano)
+                            ->whereNull('deleted_at')
                             ->select('edital_tipos.id', 'edital_tipos.nome')
                             ->groupBy('edital_tipos.id', 'edital_tipos.nome')
                             ->get();

@@ -212,7 +212,7 @@ class EditalsController extends Controller
         $anos               = $this->service->ordenaAnoPorInstituicao($request->get('instituicao_id')); 
         $tipos              = $this->service->tiposSelecionados($request->get('instituicao_id'), $request->get('ano'));
         $instituicoes       = $this->service->instituicoes();
-        
+
         if(!(isset($editais[0]))){  //não existe nenhum edital com os filtros recebidos (instituicao, ano e tipo)
             if(isset($tipos[0])){   //existe algum tipo no ano recebido (instituicao, ano)
                 $tipo_id            = $tipos[0]->id;    //a página exibirá o primeiro tipo disponível daquele ano

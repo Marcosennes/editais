@@ -187,7 +187,7 @@
                 success: function (response) 
                 {
                     anos_update(response.instituicao_selecionada, response.ano_selecionado, response.anos)
-                    tipos_update(response.tipos, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
+                    tipos_update(response.tipos,response.editais, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
                     editais_update(response.editais, response.editais_com_anexo, response.anexos)
                 }
                 
@@ -220,7 +220,7 @@
             dataType: "json",
             success: function (response) 
             {
-                tipos_update(response.tipos, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
+                tipos_update(response.tipos, response.editais, response.instituicao_selecionada, response.ano_selecionado, response.tipo_selecionado)
                 editais_update(response.editais, response.editais_com_anexo, response.anexos)
             }
             
@@ -256,9 +256,10 @@
     }
 </script>
 <script>
-    function tipos_update(tipos_local, instituicao_selecionada_local, ano_selecionado_local, tipo_selecionado_local){
+    function tipos_update(tipos_local, editais_local, instituicao_selecionada_local, ano_selecionado_local, tipo_selecionado_local){
         $('#tipos_index').remove()
         $('#tipos').append('<div id="tipos_index">')
+        console.log(tipos_local, editais_local)
         for(i=0; i < tipos_local.length; i++){
             if(tipos_local[i].id == tipo_selecionado_local){
                 if(i == (tipos_local.length - 1)){

@@ -71,6 +71,9 @@
                                         <li class="nav-item">
                                             <a id="excluir-aba" class="nav-link" href="#">Excluir</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a id="lixeira-aba" class="nav-link" href="#">Lixeira</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div id="cadastrar-body" class="card-body">
@@ -203,6 +206,9 @@
                                     </div>
                                     </form>
                                 </div> 
+                                <div id="lixeira-body" class="card-body" style="display: none;">
+                                    <p>lixeira</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -231,9 +237,10 @@ $('form[name="formFiltraAnexo"]').submit(function(event) {
             $('#anexoTable').removeClass('d-none');
             $('#bodyTable').remove();
             $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
+            console.log(response)
             $.each(response, function(index, anexo) {
-                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome + '</td><td>' +
-                    anexo.ano + '</td><td scope="row">' + "nome do pai" + '</td><td><input type="radio" name="id" value="' +
+                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td><td>' +
+                    anexo.ano + '</td><input type="radio" name="id" value="' +
                     anexo.id + '"><br></td></tr>');
             });
         },
@@ -324,17 +331,31 @@ $('#ano_anexo_select').click(function(event) {
 $('#excluir-aba').on('click', function(event) {
     event.preventDefault()
     $('#cadastrar-aba').removeClass('active')
+    $('#lixeira-aba').removeClass('active')
     $('#excluir-aba').addClass('active')
     $('#cadastrar-body').hide()
+    $('#lixeira-body').hide()
     $('#excluir-body').show()
 })
 
 $('#cadastrar-aba').on('click', function(event) {
     event.preventDefault()
     $('#excluir-aba').removeClass('active')
+    $('#lixeira-aba').removeClass('active')
     $('#cadastrar-aba').addClass('active')
     $('#excluir-body').hide()
+    $('#lixeira-body').hide()
     $('#cadastrar-body').show()
+})
+
+$('#lixeira-aba').on('click', function(event) {
+    event.preventDefault()
+    $('#cadastrar-aba').removeClass('active')
+    $('#excluir-aba').removeClass('active')
+    $('#lixeira-aba').addClass('active')
+    $('#cadastrar-body').hide()
+    $('#excluir-body').hide()
+    $('#lixeira-body').show()
 })
 </script>
 

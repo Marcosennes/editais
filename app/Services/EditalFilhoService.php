@@ -104,7 +104,7 @@ class EditalFilhoService extends EditalClass{
                                          ->where('instituicao_id', '=', $instituicao_id)
                                          ->where('ano','=',$ano)
                                          ->where('tipo_id','=',$tipo_id)
-                                         ->select('edital_filhos.id', 'edital_filhos.nome', 'ano')
+                                         ->select('edital_filhos.id', 'edital_filhos.nome', 'ano', 'editals.nome AS nome_pai')
                                          ->get();
         return $anexosFiltrados;
     }
