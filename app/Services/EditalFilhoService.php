@@ -68,7 +68,7 @@ class EditalFilhoService extends EditalClass{
     
                 $this->validator->with($aux_data)->passesOrFail(ValidatorInterface::RULE_CREATE);
                 $this->repository->create($aux_data);
-                    return ['mensagem'  => "Edital cadastrado", 'validacao' => true];
+                    return ['mensagem'  => "Anexo cadastrado", 'validacao' => true];
                         }
             }
             catch(Exception $e)
@@ -109,26 +109,32 @@ class EditalFilhoService extends EditalClass{
 
     public function restaurar($anexo_id)
     {
-        $anexo_a_ser_restaurado = EditalFilho::onlyTrashed()->where('id', $anexo_id)->get();
+        // $anexo_a_ser_restaurado = EditalFilho::onlyTrashed()->where('id', $anexo_id)->get();
 
-        $pai_id = EditalFilho::onlyTrashed()
-                             ->where('edital_filhos.id', '=', $anexo_id)
+        $pai_id = EditalFilho::withTrashed()
+                             ->where('id', '=', $anexo_id)
                              ->select('pai_id')   
                              ->get();
-        if(is_null($pai_id) || $pai_id->count() == 0)
+
+        $verifica_pai_excluido = Edital::onlyTrashed()
+                                       ->where('id', '=', $pai_id[0]['pai_id'])
+                                       ->select('*')
+                                       ->get();
+
+        if(is_null($verifica_pai_excluido) || $verifica_pai_excluido->count() == 0)
         {
-            // echo('O edital não está excluído');
+            //O edital não está excluído
             EditalFilho::onlyTrashed()
                        ->where('id', $anexo_id)
                        ->restore();
 
             return [
                 'validacao' => 'true',
-                'mensagem'  => "O Edital e os anexos relacionados foram restaurados.",
+                'mensagem'  => "O anexo foi restaurado",
             ];
 
         }else{
-            // echo('O edital está excluído');
+            //O edital está excluído
             return [
                 'validacao' => 'false',
                 'mensagem'  => "O anexo não pode ser restaurado pois o edital dono deste está excluído.",

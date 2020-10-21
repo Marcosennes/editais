@@ -62,7 +62,6 @@
                         }
                         if(isset($_SESSION['restauracao_anexo'])){
                             if($_SESSION['restauracao_anexo']['validacao'] == true){
-                                echo $_SESSION['restauracao_anexo']['validacao'];
                                 echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['restauracao_anexo']['mensagem'] . '</div>';
                             }
                             elseif($_SESSION['restauracao_anexo']['validacao'] == false){
@@ -219,6 +218,7 @@
                                     </form>
                                 </div> 
                                 <div id="lixeira-body" class="card-body" style="display: none;">
+                                    <h1>Restaurar anexo</h1>
                                     <form method="post" action="/restaura_anexo">
                                         <?php echo csrf_field(); ?>
                                             <div class="table-overflow"

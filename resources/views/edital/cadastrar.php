@@ -195,6 +195,7 @@
                                     </form>
                                 </div>
                                 <div id="lixeira-body" class="card-body" style="display: none;">
+                                    <h1>Restaurar edital</h1>
                                     <form method="post" action="/restaura_edital">
                                         <?php echo csrf_field(); ?>
                                             <div class="table-overflow"
