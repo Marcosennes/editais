@@ -126,6 +126,41 @@ class EditalService extends EditalClass{
             'mensagem'  => "O Edital não foi excluído",
         ];
     }
+
+    public function editaisExcluidos(){
+
+        $editais_excluidos = $this->repository->onlyTrashed()->get();
+        
+        return $editais_excluidos;
+    }
+
+    public function restaurar($edital_id)
+    {
+        Edital::onlyTrashed()->where('id', $edital_id)->restore();
+        $verifica_anexo = EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->get();
+
+        if(is_null($verifica_anexo) || $verifica_anexo->count() == 0)
+        {
+            return [
+                'validacao' => 'true',
+                'mensagem'  => "O Edital foi restaurado.",
+            ]; 
+        }
+        else
+        {
+            EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->restore();
+
+            return [
+                'validacao' => 'true',
+                'mensagem'  => "O Edital e os anexos relacionados foram restaurados.",
+            ];   
+        }
+
+        return [
+            'validacao' => 'false',
+            'mensagem'  => "O Edital não foi restaurado",
+        ];
+    }
     //retorna os anexos de um edital
     public function anexos($instituicao_id, $ano, $tipo_id) 
     {

@@ -44,6 +44,17 @@ class EditalFilhosController extends Controller
         return redirect()->route('edital.cadastrarAnexo');
     }
 
+    public function restaurar(Request $request)
+    {   
+        $resposta = $this->service->restaurar($request->get('id'));
+        
+        session_start();
+        $_SESSION['restauracao_anexo']['validacao']  = $resposta['validacao'];
+        $_SESSION['restauracao_anexo']['mensagem']   = $resposta['mensagem'];
+
+        return redirect()->route('edital.cadastrarAnexo');
+    }
+
     public function filtrarAnexo(Request $request)
     {
         $editais = $this->service->filtrarAnexo($request->get('instituicao_id'),$request->get('ano'), $request->get('tipo'));

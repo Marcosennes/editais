@@ -35,6 +35,7 @@
         var anos = <?php echo $anos; ?>;
         <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
         var tipos = <?php echo $tipos; ?>;
+        var editais_excluidos = <?php echo $editais_excluidos; ?>;
         </script>
         <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
             <div class="container">
@@ -51,8 +52,6 @@
                             
                             unset($_SESSION['cadastro']);
                         }
-                    ?>
-                    <?php 
                         if(isset($_SESSION['exclusao_edital'])){
                             if($_SESSION['exclusao_edital']['validacao'] == true){
                                 echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_edital']['mensagem'] . '</div>';
@@ -62,6 +61,16 @@
                             }
                             
                             unset($_SESSION['exclusao_edital']);
+                        }
+                        if(isset($_SESSION['restauracao_edital'])){
+                            if($_SESSION['restauracao_edital']['validacao'] == true){
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['restauracao_edital']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['restauracao_edital']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['restauracao_edital']['mensagem'] . '</div>';
+                            }
+                            
+                            unset($_SESSION['restauracao_edital']);
                         }
                     ?>
                     <div id="card">
@@ -186,7 +195,37 @@
                                     </form>
                                 </div>
                                 <div id="lixeira-body" class="card-body" style="display: none;">
-                                    <p>lixeira</p>
+                                    <form method="post" action="/restaura_edital">
+                                        <?php echo csrf_field(); ?>
+                                            <div class="table-overflow"
+                                                style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                                <table id="tableEdital"
+                                                    class="table table-sm table-striped table-bordered table-hover"
+                                                    style="background-color: white">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Nome do edital</th>
+                                                            <th scope="col">Ano</th>
+                                                            <th scope="col">Data de exclusão</th>
+                                                            <th scope="col">Selecione</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="trashEditalTable">
+                                                        <script>
+                                                            let data_de_exclusao
+                                                            $.each(editais_excluidos, function(index, edital) {
+                                                                data_de_exclusao =  edital.deleted_at.split("T")
+                                                                data_de_exclusao[0] =  data_de_exclusao[0].split("-")
+                                                                $('#trashEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
+                                                                    edital.ano + '</td><td> ' + data_de_exclusao[0][2] + '/' + data_de_exclusao[0][1] + '/' + data_de_exclusao[0][0] + ' </td><td><input type="radio" name="id" value="' +
+                                                                    edital.id + '"><br></td></tr>');
+                                                            });
+                                                        </script>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <button class="btn btn-info" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Restaurar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -234,8 +273,9 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $.each(response, function(index, edital) {
                 $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
                     edital.ano + '</td><td><input type="radio" name="id" value="' +
-                    edital.id + '"><br></td></tr>');
+                    edital.id + '"></td><br></tr>');
             });
+            $('#tableEdital').append('</tbody>');
         }
     });
 

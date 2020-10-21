@@ -8,6 +8,7 @@ use App\Entities\EditalTipo;
 use App\Http\Requests\editalCreateRequest;
 use App\Repositories\EditalRepository;
 use App\Services\EditalService;
+use App\Services\EditalFilhoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,10 +17,11 @@ class EditalsController extends Controller
     protected $repository;
     protected $service;
 
-    public function __construct(EditalRepository $repository, EditalService $service)
+    public function __construct(EditalRepository $repository, EditalService $service, EditalFilhoService $anexo_service)
     {
-        $this->repository   = $repository;
-        $this->service      = $service;
+        $this->repository       = $repository;
+        $this->service          = $service;
+        $this->anexo_service    = $anexo_service;
     }
 
     public function index()
@@ -51,6 +53,7 @@ class EditalsController extends Controller
         $anos                               = $this->service->ordenaAno();
         $anos_tipos_instituicoes            = array();
         $tipos                              = $this->service->tipos();
+        $editais_excluidos                  = $this->service->editaisExcluidos();
 
         for($i = 0; $i < sizeof($instituicoes); $i++){
             $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
@@ -61,6 +64,7 @@ class EditalsController extends Controller
             'anos_tipos_instituicoes'   => $anos_tipos_instituicoes,
             'tipos'                     => $tipos,
             'instituicoes'              => $instituicoes,
+            'editais_excluidos'         => $editais_excluidos,
         ]);
     }
 
@@ -70,6 +74,7 @@ class EditalsController extends Controller
         $anos                               = $this->service->ordenaAno();
         $anos_tipos_instituicoes            = array();
         $tipos                              = $this->service->tipos();
+        $anexos_excluidos                   = $this->anexo_service->anexosExcluidos();
 
         for($i = 0; $i < sizeof($instituicoes); $i++){
             $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
@@ -80,6 +85,7 @@ class EditalsController extends Controller
             'anos_tipos_instituicoes'   => $anos_tipos_instituicoes,
             'tipos'                     => $tipos,
             'instituicoes'              => $instituicoes,
+            'anexos_excluidos'          => $anexos_excluidos,
         ]);
     }
 
@@ -115,6 +121,18 @@ class EditalsController extends Controller
 
         return redirect()->route('edital.cadastrar');
     }
+
+    public function restaurar(Request $request)
+    {
+        $resposta = $this->service->restaurar($request->get('id'));
+
+        session_start();
+        $_SESSION['restauracao_edital']['validacao']  = $resposta['validacao'];
+        $_SESSION['restauracao_edital']['mensagem']   = $resposta['mensagem'];
+
+        return redirect()->route('edital.cadastrar');
+    }
+
         //função filtrarPost é similar mas utilizando o método Post. A função filtrar não está sendo utilizada  
     /*
     public function filtrar($instituicao_id, $ano, $tipo_id)

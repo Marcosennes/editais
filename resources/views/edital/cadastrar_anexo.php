@@ -29,10 +29,11 @@
     <section class="sectionmain" id="view-conteudo">       
         <?php session_start(); ?>
         <script>
-        var instituicoes = <?php echo $instituicoes; ?>;
-        var anos = <?php echo $anos; ?>;
+        var instituicoes        = <?php echo $instituicoes; ?>;
+        var anos                = <?php echo $anos; ?>;
         <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
-        var tipos = <?php echo $tipos; ?>;
+        var tipos               = <?php echo $tipos; ?>;
+        var anexos_excluidos    = <?php echo $anexos_excluidos; ?>;
         </script>
         <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
             <div class="container">
@@ -48,7 +49,7 @@
                             
                             unset($_SESSION['cadastro_anexo']);
                         }
-
+                    
                         if(isset($_SESSION['exclusao_anexo'])){
                             if($_SESSION['exclusao_anexo']['validacao'] == true){
                                 echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['exclusao_anexo']['mensagem'] . '</div>';
@@ -58,6 +59,17 @@
                             }
                             
                             unset($_SESSION['exclusao_anexo']);
+                        }
+                        if(isset($_SESSION['restauracao_anexo'])){
+                            if($_SESSION['restauracao_anexo']['validacao'] == true){
+                                echo $_SESSION['restauracao_anexo']['validacao'];
+                                echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['restauracao_anexo']['mensagem'] . '</div>';
+                            }
+                            elseif($_SESSION['restauracao_anexo']['validacao'] == false){
+                                echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['restauracao_anexo']['mensagem'] . '</div>';
+                            }
+                            
+                            unset($_SESSION['restauracao_anexo']);
                         }
                     ?>
                     <div id="card">
@@ -191,8 +203,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Nome do anexo</th>
-                                                        <th scope="col">Ano</th>
                                                         <th scope="col">Nome do Edital Pai</th>
+                                                        <th scope="col">Ano</th>
                                                         <th scope="col">Selecione</th>
                                                     </tr>
                                                 </thead>
@@ -207,7 +219,38 @@
                                     </form>
                                 </div> 
                                 <div id="lixeira-body" class="card-body" style="display: none;">
-                                    <p>lixeira</p>
+                                    <form method="post" action="/restaura_anexo">
+                                        <?php echo csrf_field(); ?>
+                                            <div class="table-overflow"
+                                                style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                                <table id="tableEdital"
+                                                    class="table table-sm table-striped table-bordered table-hover"
+                                                    style="background-color: white">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Nome do anexo</th>
+                                                            <th scope="col">Nome do Pai</th>
+                                                            <th scope="col">Ano</th>
+                                                            <th scope="col">Data de exclusão</th>
+                                                            <th scope="col">Selecione</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="trashAnexoTable">
+                                                        <script>
+                                                            let data_de_exclusao
+                                                            $.each(anexos_excluidos, function(index, anexo) {
+                                                                data_de_exclusao =  anexo.deleted_at.split("T")
+                                                                data_de_exclusao[0] =  data_de_exclusao[0].split("-")
+                                                                $('#trashAnexoTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td>' +
+                                                                    anexo.ano + '</td><td> ' + data_de_exclusao[0][2] + '/' + data_de_exclusao[0][1] + '/' + data_de_exclusao[0][0] + ' </td><td><input type="radio" name="id" value="' +
+                                                                    anexo.id + '"><br></td></tr>');
+                                                            });
+                                                        </script>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <button class="btn btn-info" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Restaurar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -239,9 +282,9 @@ $('form[name="formFiltraAnexo"]').submit(function(event) {
             $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
             console.log(response)
             $.each(response, function(index, anexo) {
-                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td><td>' +
-                    anexo.ano + '</td><input type="radio" name="id" value="' +
-                    anexo.id + '"><br></td></tr>');
+                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td>' +
+                    anexo.ano + '</td><td><input type="radio" name="id" value="' +
+                    anexo.id + '"></td><br></tr>');
             });
         },
         error: function(e){
@@ -274,7 +317,7 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $.each(response, function(index, edital) {
                 $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
                     edital.ano + '</td><td><input type="radio" name="pai_id" value="' +
-                    edital.id + '"><br></td></tr>');
+                    edital.id + '"></td><br></tr>');
             });
         }
     });

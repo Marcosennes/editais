@@ -87,14 +87,55 @@ class EditalFilhoService extends EditalClass{
         }
     }
 
-    public function excluir($edital_id)
+    public function excluir($anexo_id)
     {
-        $this->repository->delete($edital_id);
+        $this->repository->delete($anexo_id);
 
         return [
             'validacao' => 'true',
             'mensagem'  => "Anexo excluído",
         ];
+    }
+
+    public function anexosExcluidos()
+    {
+        $anexos_excluidos = EditalFilho::onlyTrashed()
+                                       ->join('editals', 'editals.id', '=', 'edital_filhos.pai_id')
+                                       ->select('edital_filhos.id', 'edital_filhos.nome', 'ano', 'editals.nome AS nome_pai', 'edital_filhos.deleted_at')
+                                       ->get();
+
+        return $anexos_excluidos;
+    }
+
+    public function restaurar($anexo_id)
+    {
+        $anexo_a_ser_restaurado = EditalFilho::onlyTrashed()->where('id', $anexo_id)->get();
+
+        $pai_id = EditalFilho::onlyTrashed()
+                             ->where('edital_filhos.id', '=', $anexo_id)
+                             ->select('pai_id')   
+                             ->get();
+        if(is_null($pai_id) || $pai_id->count() == 0)
+        {
+            // echo('O edital não está excluído');
+            EditalFilho::onlyTrashed()
+                       ->where('id', $anexo_id)
+                       ->restore();
+
+            return [
+                'validacao' => 'true',
+                'mensagem'  => "O Edital e os anexos relacionados foram restaurados.",
+            ];
+
+        }else{
+            // echo('O edital está excluído');
+            return [
+                'validacao' => 'false',
+                'mensagem'  => "O anexo não pode ser restaurado pois o edital dono deste está excluído.",
+            ];
+        }
+        // dd($anexo_id, $pai_id[0]['pai_id'], $verifica_pai_deletado[0]['deleted_at']);
+
     }
 
     public function filtrarAnexo($instituicao_id, $ano, $tipo_id)
