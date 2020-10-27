@@ -7,6 +7,10 @@ Route::get('/login',            ['uses' => 'UsersController@login',         'as'
 Route::post('/efetua_login',    ['uses' => 'UsersController@autenticar',    'as'        =>'login.autenticar']);
 Route::get('/filtrar/{instituicao_selecionada}/{ano_selecionado}/{tipo_id}', ['uses' => 'EditalsController@filtrar', 'as' =>'editais.filtrar']);
 
+Route::get('/teste', function(){
+    return view('edital.teste');
+});
+
 /*
 * Rota '/filtrarpost' sem funcionalidade por enquanto. A intenção era facilitar a implementação de requisição ajax na index com
 * uma chamada post ao invés de usar uma rota get. Não pode ser utilizada a mesma rota utilizada sem a requisição ajax
@@ -19,6 +23,7 @@ Route::post('/filtrar_instituicao',  ['uses' => 'EditalsController@filtrarInstit
 Route::group(['middleware' => 'autenticar.login'], function() {
     
     //Rotas somente para usuários logados
+    Route::get('/menu_admin',           ['uses' => 'EditalsController@menuAdmin',           'as' => 'edital.menuAdmin']);
     Route::get('/cadastrar',            ['uses' => 'EditalsController@cadastrar',           'as' => 'edital.cadastrar']);
     Route::get('/cadastrar_anexo',      ['uses' => 'EditalsController@cadastrarAnexo',      'as' => 'edital.cadastrarAnexo']);
     Route::post('/salva_edital',        ['uses' => 'EditalsController@salvar',              'as' => 'edital.salvar']);

@@ -47,6 +47,11 @@ class EditalsController extends Controller
         ]);
     }
 
+    public function menuAdmin()
+    {
+        return view('edital.menu_admin');
+    }
+
     public function cadastrar()
     {
         $instituicoes                       = $this->service->instituicoes();

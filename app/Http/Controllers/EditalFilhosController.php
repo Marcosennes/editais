@@ -51,7 +51,7 @@ class EditalFilhosController extends Controller
         session_start();
         $_SESSION['restauracao_anexo']['validacao']  = $resposta['validacao'];
         $_SESSION['restauracao_anexo']['mensagem']   = $resposta['mensagem'];
-
+        
         return redirect()->route('edital.cadastrarAnexo');
     }
 

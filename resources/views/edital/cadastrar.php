@@ -26,22 +26,37 @@
 </head>
 
 <body>
-    <section class="sectionmain" id="view-conteudo">
-        <?php
+    <header id="header-cadastrar" class="col-12">
+        <nav class="navbar navbar-expand">
+            <div class="offset-1 col-10 offset-md-2 col-md-8 row container-fluid">
+                <a class="navbar-brand not-active" href="#">Admin</a>
+                <div class="collapse navbar-collapse container-fluid" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link not-active" href="/cadastrar">Editais</a>
+                        <a class="nav-item nav-link active" href="/cadastrar_anexo">Anexos</a>
+                    </div>
+                    <a class="nav-item nav-link" href="/logout">Sair</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div id="div-principal" class="offset-md-2 col-12 col-md-8">
+        <section class="sectionmain" id="view-conteudo">
+            <?php
             session_start();
         ?>
-        <script>
-        var instituicoes = <?php echo $instituicoes; ?>;
-        var anos = <?php echo $anos; ?>;
-        <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
-        var tipos = <?php echo $tipos; ?>;
-        var editais_excluidos = <?php echo $editais_excluidos; ?>;
-        </script>
-        <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
-            <div class="container">
-                <div id="coluna-principal" class="row d-flex flex-column">
-                    <!-- <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a> -->
-                    <?php 
+            <script>
+            var instituicoes = <?php echo $instituicoes; ?>;
+            var anos = <?php echo $anos; ?>;
+            <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
+            var tipos = <?php echo $tipos; ?>;
+            var editais_excluidos = <?php echo $editais_excluidos; ?>;
+            </script>
+            <div>
+                <div class="container">
+                    <div id="coluna-principal" class="col-12 row d-flex flex-column">
+                        <!-- <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a> -->
+                        <?php 
                         if(isset($_SESSION['cadastro'])){
                             if($_SESSION['cadastro']['validacao'] == true){
                                 echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['cadastro']['mensagem'] . '</div>';
@@ -73,169 +88,188 @@
                             unset($_SESSION['restauracao_edital']);
                         }
                     ?>
-                    <div id="card">
-                        <div id="conteudo-card">
-                            <div class="card text-center">
-                                <div class="card-header">
-                                    <ul class="nav nav-tabs card-header-tabs">
-                                        <li class="nav-item">
-                                            <a id="cadastrar-aba" class="nav-link active" href="#">Cadastrar</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a id="excluir-aba" class="nav-link" href="#">Excluir</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a id="lixeira-aba" class="nav-link" href="#">Lixeira</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div id="cadastrar-body" class="card-body">
-                                    <form method="post" action="/salva_edital" enctype="multipart/form-data">
-                                        <?php echo csrf_field(); ?>
-                                        <h1>Cadastrar edital</h1>
-                                        <label for="instituicao">Instituição</label>
-                                        <select id="instituicoes_select" name="instituicao_id" class="form-control">
-                                            <script>
-                                            for (i = 0; i < instituicoes.length; i++) {
-                                                $('#instituicoes_select').append('<option value="' + instituicoes[i]
-                                                    .id + '">' + instituicoes[i].nome + '</option>')
-                                            }
-                                            </script>
-                                        </select>
-                                        <label style="margin-top: 10px;" for="edital">Nome do edital</label>
-                                        <input type="text" class="form-control" name="nome">
-                                        <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
-                                        <input type="file" name="arquivo" id="arquivo">
-                                        <br>
-                                        <label style="margin-top: 10px;" for="tipo">Tipo</label>
-                                        <select id="tipos_select" name="tipo_id" class="form-control">
-                                            <script>
-                                            for (i = 0; i < tipos.length; i++) {
-                                                $('#tipos_select').append('<option value="' + tipos[i].id + '">' +
-                                                    tipos[i].nome + '</option>')
-                                            }
-                                            </script>
-                                        </select>
-                                        <label style="margin-top: 10px;" for="ano">Ano</label>
-                                        <input type="text" onkeypress="return onlynumber();" class="form-control"
-                                            name="ano">
-                                        <!--
+                        <div id="card">
+                            <div id="conteudo-card" class="offset-md-1 col-md-10">
+                                <div class="card text-center">
+                                    <div class="card-header">
+                                        <ul class="nav nav-tabs card-header-tabs">
+                                            <li class="nav-item">
+                                                <a id="cadastrar-aba" class="nav-link active" href="#">Cadastrar</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a id="excluir-aba" class="nav-link" href="#">Excluir</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a id="lixeira-aba" class="nav-link" href="#">Lixeira</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a id="relatorio-aba" class="nav-link" href="#">Relatório</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div id="cadastrar-body" class="card-body">
+                                        <form method="post" action="/salva_edital" enctype="multipart/form-data">
+                                            <?php echo csrf_field(); ?>
+                                            <h1>Cadastrar edital</h1>
+                                            <label for="instituicao">Instituição</label>
+                                            <select id="instituicoes_select" name="instituicao_id" class="form-control">
+                                                <script>
+                                                for (i = 0; i < instituicoes.length; i++) {
+                                                    $('#instituicoes_select').append('<option value="' + instituicoes[i]
+                                                        .id + '">' + instituicoes[i].nome + '</option>')
+                                                }
+                                                </script>
+                                            </select>
+                                            <label style="margin-top: 10px;" for="edital">Nome do edital</label>
+                                            <input type="text" class="form-control" name="nome">
+                                            <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
+                                            <input type="file" name="arquivo" id="arquivo">
+                                            <br>
+                                            <label style="margin-top: 10px;" for="tipo">Tipo</label>
+                                            <select id="tipos_select" name="tipo_id" class="form-control">
+                                                <script>
+                                                for (i = 0; i < tipos.length; i++) {
+                                                    $('#tipos_select').append('<option value="' + tipos[i].id + '">' +
+                                                        tipos[i].nome + '</option>')
+                                                }
+                                                </script>
+                                            </select>
+                                            <label style="margin-top: 10px;" for="ano">Ano</label>
+                                            <input type="text" onkeypress="return onlynumber();" class="form-control"
+                                                name="ano">
+                                            <!--
                                         <label for="anexo">O edital possui anexo?</label>
                                         <a id="adicionar_anexo" class="btn btn-1">Anexar arquivo neste edital</a>
                                         -->
-                                        <button class="btn btn-primary" style="width: 100%; margin-top: 11px;"
-                                            type="submit">Cadastrar</button>
-                                    </form>
-                                </div>
-                                <div id="excluir-body" class="card-body" style="display: none;">
-                                    <form name="formFiltraEdital">
-                                        <?php echo csrf_field(); ?>
-                                        <h1>Excluir edital</h1>
-                                        <label for="instituicao">Instituição</label>
-                                        <select id="instituicoes_edital_select" name="instituicao_id"
-                                            class="form-control">
-                                            <script>
-                                            for (i = 0; i < instituicoes.length; i++) {
-                                                $('#instituicoes_edital_select').append('<option value="' +
-                                                    instituicoes[
-                                                        i].id + '">' +
-                                                    instituicoes[i].nome + '</option>')
-                                            }
-                                            </script>
-                                        </select>
-                                        <label for="ano">Ano</label>
-                                        <select id="ano_edital_select" name="ano" class="form-control">
-                                            <script>
-                                            anos_instituicao_selecionada = anos_tipos_instituicoes[0];
-                                            for (var i = 0; i < anos_instituicao_selecionada.length; i++) {
-                                                $("#ano_edital_select").append('<option value="' +
-                                                    anos_instituicao_selecionada[i].ano +
-                                                    '">' + anos_instituicao_selecionada[i].ano + '</option>')
-                                            }
-                                            </script>
-                                        </select>
-                                        <label for="tipo">Tipo</label>
-                                        <select id="tipos_edital_select" name="tipo" class="form-control">
-                                            <script>
-                                            for (i = 0; i < tipos.length; i++) {
-                                                $('#tipos_edital_select').append('<option value="' + tipos[i].id +
-                                                    '">' +
-                                                    tipos[i].nome +
-                                                    '</option>')
-                                            }
-                                            </script>
-                                        </select>
-                                        <button class="btn btn-primary"
-                                            style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
-                                            type="submit">Filtrar</button>
-                                    </form>
-                                    <form method="post" action="/exclui_edital">
-                                    <?php echo csrf_field(); ?>
-                                    <div class="d-none" id="editalTable">
-                                        <div class="table-overflow"
-                                            style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                                            <table id="tableEdital"
-                                                class="table table-sm table-striped table-bordered table-hover"
-                                                style="background-color: white">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Nome do edital</th>
-                                                        <th scope="col">Ano</th>
-                                                        <th scope="col">Selecione</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="bodyEditalTable">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <button class="btn btn-danger"
-                                            style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
-                                            type="submit">Excluir</button>
+                                            <button class="btn btn-primary" style="width: 100%; margin-top: 11px;"
+                                                type="submit">Cadastrar</button>
+                                        </form>
                                     </div>
-                                    </form>
-                                </div>
-                                <div id="lixeira-body" class="card-body" style="display: none;">
-                                    <h1>Restaurar edital</h1>
-                                    <form method="post" action="/restaura_edital">
-                                        <?php echo csrf_field(); ?>
+                                    <div id="excluir-body" class="card-body" style="display: none;">
+                                        <form name="formFiltraEdital">
+                                            <?php echo csrf_field(); ?>
+                                            <h1>Excluir edital</h1>
+                                            <label for="instituicao">Instituição</label>
+                                            <select id="instituicoes_edital_select" name="instituicao_id"
+                                                class="form-control">
+                                                <script>
+                                                for (i = 0; i < instituicoes.length; i++) {
+                                                    $('#instituicoes_edital_select').append('<option value="' +
+                                                        instituicoes[
+                                                            i].id + '">' +
+                                                        instituicoes[i].nome + '</option>')
+                                                }
+                                                </script>
+                                            </select>
+                                            <label for="ano">Ano</label>
+                                            <select id="ano_edital_select" name="ano" class="form-control">
+                                                <script>
+                                                anos_instituicao_selecionada = anos_tipos_instituicoes[0];
+                                                for (var i = 0; i < anos_instituicao_selecionada.length; i++) {
+                                                    $("#ano_edital_select").append('<option value="' +
+                                                        anos_instituicao_selecionada[i].ano +
+                                                        '">' + anos_instituicao_selecionada[i].ano + '</option>')
+                                                }
+                                                </script>
+                                            </select>
+                                            <label for="tipo">Tipo</label>
+                                            <select id="tipos_edital_select" name="tipo" class="form-control">
+                                                <script>
+                                                for (i = 0; i < tipos.length; i++) {
+                                                    $('#tipos_edital_select').append('<option value="' + tipos[i].id +
+                                                        '">' +
+                                                        tipos[i].nome +
+                                                        '</option>')
+                                                }
+                                                </script>
+                                            </select>
+                                            <button class="btn btn-primary"
+                                                style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                                type="submit">Filtrar</button>
+                                        </form>
+                                        <form method="post" action="/exclui_edital">
+                                            <?php echo csrf_field(); ?>
+                                            <div class="d-none" id="editalTable">
+                                                <div class="table-overflow"
+                                                    style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                                    <div class="tableFixHead">
+                                                        <table id="tableEdital"
+                                                            class="table table-sm table-striped table-bordered table-hover"
+                                                            style="background-color: white">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Nome do edital</th>
+                                                                    <th scope="col">Ano</th>
+                                                                    <th scope="col">Selecione</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="bodyEditalTable">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-danger"
+                                                    style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                                    type="submit">Excluir</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div id="lixeira-body" class="card-body" style="display: none;">
+                                        <h1>Restaurar edital</h1>
+                                        <form method="post" action="/restaura_edital">
+                                            <?php echo csrf_field(); ?>
                                             <div class="table-overflow"
                                                 style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                                                <table id="tableEdital"
-                                                    class="table table-sm table-striped table-bordered table-hover"
-                                                    style="background-color: white">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Nome do edital</th>
-                                                            <th scope="col">Ano</th>
-                                                            <th scope="col">Data de exclusão</th>
-                                                            <th scope="col">Selecione</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="trashEditalTable">
-                                                        <script>
+                                                <div class="tableFixHead">
+                                                    <table id="tableEdital"
+                                                        class="table table-sm table-striped table-bordered table-hover"
+                                                        style="background-color: white">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Nome do edital</th>
+                                                                <th scope="col">Ano</th>
+                                                                <th scope="col">Data de exclusão</th>
+                                                                <th scope="col">Selecione</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="trashEditalTable">
+                                                            <script>
                                                             let data_de_exclusao
                                                             $.each(editais_excluidos, function(index, edital) {
-                                                                data_de_exclusao =  edital.deleted_at.split("T")
-                                                                data_de_exclusao[0] =  data_de_exclusao[0].split("-")
-                                                                $('#trashEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
-                                                                    edital.ano + '</td><td> ' + data_de_exclusao[0][2] + '/' + data_de_exclusao[0][1] + '/' + data_de_exclusao[0][0] + ' </td><td><input type="radio" name="id" value="' +
+                                                                data_de_exclusao = edital.deleted_at.split("T")
+                                                                data_de_exclusao[0] = data_de_exclusao[0].split(
+                                                                    "-")
+                                                                $('#trashEditalTable').append(
+                                                                    '<tr><td scope="row">' + edital.nome +
+                                                                    '</td><td>' +
+                                                                    edital.ano + '</td><td> ' +
+                                                                    data_de_exclusao[0][2] + '/' +
+                                                                    data_de_exclusao[0][1] + '/' +
+                                                                    data_de_exclusao[0][0] +
+                                                                    ' </td><td><input type="radio" name="id" value="' +
                                                                     edital.id + '"><br></td></tr>');
                                                             });
-                                                        </script>
-                                                    </tbody>
-                                                </table>
+                                                            </script>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
-                                            <button class="btn btn-info" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Restaurar</button>
-                                    </form>
+                                            <button class="btn btn-info"
+                                                style="width: 100%; margin-top: 25px; margin-bottom: 20px;"
+                                                type="submit">Restaurar</button>
+                                        </form>
+                                    </div>
+                                    <div id="relatorio-body" class="card-body" style="display: none;">
+                                        <p>aaaa</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <a href="/logout" class="btn btn-danger" style="width: 100%; margin-top: 11px;">Sair</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </body>
 
 <script>
@@ -272,7 +306,8 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $('#bodyEditalTable').remove();
             $('#tableEdital').append('<tbody id = "bodyEditalTable"></tbody>');
             $.each(response, function(index, edital) {
-                $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
+                $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome +
+                    '</td><td>' +
                     edital.ano + '</td><td><input type="radio" name="id" value="' +
                     edital.id + '"></td><br></tr>');
             });
@@ -380,9 +415,11 @@ $('#cadastrar-aba').on('click', function(event) {
     event.preventDefault()
     $('#excluir-aba').removeClass('active')
     $('#lixeira-aba').removeClass('active')
+    $('#relatorio-aba').removeClass('active')
     $('#cadastrar-aba').addClass('active')
     $('#excluir-body').hide()
     $('#lixeira-body').hide()
+    $('#relatorio-body').hide()
     $('#cadastrar-body').show()
 })
 
@@ -390,10 +427,24 @@ $('#lixeira-aba').on('click', function(event) {
     event.preventDefault()
     $('#cadastrar-aba').removeClass('active')
     $('#excluir-aba').removeClass('active')
+    $('#relatorio-aba').removeClass('active')
     $('#lixeira-aba').addClass('active')
     $('#cadastrar-body').hide()
     $('#excluir-body').hide()
+    $('#relatorio-body').hide()
     $('#lixeira-body').show()
+})
+
+$('#relatorio-aba').on('click', function(event) {
+    event.preventDefault()
+    $('#cadastrar-aba').removeClass('active')
+    $('#excluir-aba').removeClass('active')
+    $('#lixeira-aba').removeClass('active')
+    $('#relatorio-aba').addClass('active')
+    $('#cadastrar-body').hide()
+    $('#excluir-body').hide()
+    $('#lixeira-body').hide()
+    $('#relatorio-body').show()
 })
 </script>
 

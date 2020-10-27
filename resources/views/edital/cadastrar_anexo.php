@@ -26,15 +26,27 @@
 </head>
 
 <body>
-    <section class="sectionmain" id="view-conteudo">       
+    <section class="sectionmain" id="view-conteudo">
         <?php session_start(); ?>
         <script>
-        var instituicoes        = <?php echo $instituicoes; ?>;
-        var anos                = <?php echo $anos; ?>;
+        var instituicoes = <?php echo $instituicoes; ?>;
+        var anos = <?php echo $anos; ?>;
         <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
-        var tipos               = <?php echo $tipos; ?>;
-        var anexos_excluidos    = <?php echo $anexos_excluidos; ?>;
+        var tipos = <?php echo $tipos; ?>;
+        var anexos_excluidos = <?php echo $anexos_excluidos; ?>;
         </script>
+            <header>
+                <nav class="navbar navbar-expand">
+                    <a class="navbar-brand not-active" style="margin-left: 230px;" href="#">Admin</a>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <div class="navbar-nav">
+                            <a class="nav-item nav-link active" href="/cadastrar">Editais</a>
+                            <a class="nav-item nav-link not-active" href="/cadastrar_anexo">Anexos</a>
+                            <a class="nav-item nav-link" style="margin-left: 590px;" href="/logout">Sair</a>
+                        </div>
+                    </div>
+                </nav>
+            </header>
         <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
             <div class="container">
                 <div id="coluna-principal" class="row d-flex flex-column">
@@ -92,10 +104,12 @@
                                         <?php echo csrf_field(); ?>
                                         <h1>Cadastrar anexo</h1>
                                         <label for="instituicao">Instituição</label>
-                                        <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">
+                                        <select id="instituicoes_anexo_select" name="instituicao_id"
+                                            class="form-control">
                                             <script>
                                             for (i = 0; i < instituicoes.length; i++) {
-                                                $('#instituicoes_anexo_select').append('<option value="' + instituicoes[i].id + '">' +
+                                                $('#instituicoes_anexo_select').append('<option value="' + instituicoes[
+                                                        i].id + '">' +
                                                     instituicoes[i].nome + '</option>')
                                             }
                                             </script>
@@ -105,7 +119,8 @@
                                             <script>
                                             anos_instituicao_selecionada = anos_tipos_instituicoes[0];
                                             for (var i = 0; i < anos_instituicao_selecionada.length; i++) {
-                                                $("#ano_anexo_select").append('<option value="' + anos_instituicao_selecionada[i].ano +
+                                                $("#ano_anexo_select").append('<option value="' +
+                                                    anos_instituicao_selecionada[i].ano +
                                                     '">' + anos_instituicao_selecionada[i].ano + '</option>')
                                             }
                                             </script>
@@ -114,41 +129,48 @@
                                         <select id="tipos_anexo_select" name="tipo" class="form-control">
                                             <script>
                                             for (i = 0; i < tipos.length; i++) {
-                                                $('#tipos_anexo_select').append('<option value="' + tipos[i].id + '">' + tipos[i].nome +
+                                                $('#tipos_anexo_select').append('<option value="' + tipos[i].id + '">' +
+                                                    tipos[i].nome +
                                                     '</option>')
                                             }
                                             </script>
                                         </select>
-                                        <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                        <button class="btn btn-primary"
+                                            style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
                                             type="submit">Filtrar</button>
                                     </form>
                                     <form method="post" action="/salva_edital_anexo" enctype="multipart/form-data">
                                         <?php echo csrf_field(); ?>
                                         <div class="d-none" id="editalTable">
-                                            <div class="table-overflow" style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                                                <table id="tableEdital" class="table table-sm table-striped table-bordered table-hover"
-                                                    style="background-color: white">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Nome do edital</th>
-                                                            <th scope="col">Ano</th>
-                                                            <th scope="col">Selecione</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="bodyEditalTable">
-                                                    </tbody>
-                                                </table>
+                                            <div class="table-overflow"
+                                                style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                                <div class="tableFixHead">
+                                                    <table id="tableEdital"
+                                                        class="table table-sm table-striped table-bordered table-hover"
+                                                        style="background-color: white">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Nome do edital</th>
+                                                                <th scope="col">Ano</th>
+                                                                <th scope="col">Selecione</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="bodyEditalTable">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
                                             <label style="margin-top: 10px;" for="edital">Nome do anexo</label>
                                             <input type="text" class="form-control" name="nome">
                                             <label style="margin-top: 10px;" for="arquivo">Selecione o arquivo</label>
                                             <input type="file" name="arquivo" id="arquivo">
                                             <br>
-                                            <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                            <button class="btn btn-primary"
+                                                style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
                                                 type="submit">Cadastrar</button>
                                         </div>
                                     </form>
-                                </div>   
+                                </div>
                                 <div id="excluir-body" class="card-body" style="display: none;">
                                     <form name="formFiltraAnexo">
                                         <?php echo csrf_field(); ?>
@@ -192,37 +214,40 @@
                                             type="submit">Filtrar</button>
                                     </form>
                                     <form method="post" action="/exclui_anexo">
-                                    <?php echo csrf_field(); ?>
-                                    <div class="d-none" id="anexoTable">
-                                        <div class="table-overflow"
-                                            style="margin-top: 20px; max-height:400px; overflow-y:auto;">
-                                            <table id="tableAnexos"
-                                                class="table table-sm table-striped table-bordered table-hover"
-                                                style="background-color: white">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Nome do anexo</th>
-                                                        <th scope="col">Nome do Edital Pai</th>
-                                                        <th scope="col">Ano</th>
-                                                        <th scope="col">Selecione</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="bodyTable">
-                                                </tbody>
-                                            </table>
+                                        <?php echo csrf_field(); ?>
+                                        <div class="d-none" id="anexoTable">
+                                            <div class="table-overflow"
+                                                style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                                <div class="tableFixHead">
+                                                    <table id="tableAnexos"
+                                                        class="table table-sm table-striped table-bordered table-hover"
+                                                        style="background-color: white">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Nome do anexo</th>
+                                                                <th scope="col">Nome do Edital Pai</th>
+                                                                <th scope="col">Ano</th>
+                                                                <th scope="col">Selecione</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="bodyTable">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-danger"
+                                                style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                                type="submit">Excluir</button>
                                         </div>
-                                        <button class="btn btn-danger"
-                                            style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
-                                            type="submit">Excluir</button>
-                                    </div>
                                     </form>
-                                </div> 
+                                </div>
                                 <div id="lixeira-body" class="card-body" style="display: none;">
                                     <h1>Restaurar anexo</h1>
                                     <form method="post" action="/restaura_anexo">
                                         <?php echo csrf_field(); ?>
-                                            <div class="table-overflow"
-                                                style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                        <div class="table-overflow"
+                                            style="margin-top: 20px; max-height:400px; overflow-y:auto;">
+                                            <div class="tableFixHead">
                                                 <table id="tableEdital"
                                                     class="table table-sm table-striped table-bordered table-hover"
                                                     style="background-color: white">
@@ -237,28 +262,36 @@
                                                     </thead>
                                                     <tbody id="trashAnexoTable">
                                                         <script>
-                                                            let data_de_exclusao
-                                                            $.each(anexos_excluidos, function(index, anexo) {
-                                                                data_de_exclusao =  anexo.deleted_at.split("T")
-                                                                data_de_exclusao[0] =  data_de_exclusao[0].split("-")
-                                                                $('#trashAnexoTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td>' +
-                                                                    anexo.ano + '</td><td> ' + data_de_exclusao[0][2] + '/' + data_de_exclusao[0][1] + '/' + data_de_exclusao[0][0] + ' </td><td><input type="radio" name="id" value="' +
-                                                                    anexo.id + '"><br></td></tr>');
-                                                            });
+                                                        let data_de_exclusao
+                                                        $.each(anexos_excluidos, function(index, anexo) {
+                                                            data_de_exclusao = anexo.deleted_at.split("T")
+                                                            data_de_exclusao[0] = data_de_exclusao[0].split("-")
+                                                            $('#trashAnexoTable').append(
+                                                                '<tr><td scope="row">' + anexo.nome +
+                                                                '</td><td scope="row">' + anexo.nome_pai +
+                                                                '</td><td>' +
+                                                                anexo.ano + '</td><td> ' + data_de_exclusao[
+                                                                    0][2] + '/' + data_de_exclusao[0][1] +
+                                                                '/' + data_de_exclusao[0][0] +
+                                                                ' </td><td><input type="radio" name="id" value="' +
+                                                                anexo.id + '"><br></td></tr>');
+                                                        });
                                                         </script>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <button class="btn btn-info" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Restaurar</button>
+                                        </div>
+                                        <button class="btn btn-info"
+                                            style="width: 100%; margin-top: 25px; margin-bottom: 20px;"
+                                            type="submit">Restaurar</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <a href="/logout" class="btn btn-danger" style="width: 100%; margin-top: 11px;">Sair</a>
                 </div>
             </div>
-        </div>    
+        </div>
     </section>
 </body>
 <script type="text/javascript">
@@ -282,12 +315,13 @@ $('form[name="formFiltraAnexo"]').submit(function(event) {
             $('#tableAnexos').append('<tbody id = "bodyTable"></tbody>');
             console.log(response)
             $.each(response, function(index, anexo) {
-                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome + '</td><td scope="row">' + anexo.nome_pai + '</td><td>' +
+                $('#bodyTable').append('<tr><td scope="row">' + anexo.nome +
+                    '</td><td scope="row">' + anexo.nome_pai + '</td><td>' +
                     anexo.ano + '</td><td><input type="radio" name="id" value="' +
                     anexo.id + '"></td><br></tr>');
             });
         },
-        error: function(e){
+        error: function(e) {
             alert(e)
         }
     });
@@ -315,7 +349,8 @@ $('form[name="formFiltraEdital"]').submit(function(event) {
             $('#bodyEditalTable').remove();
             $('#tableEdital').append('<tbody id = "bodyEditalTable"></tbody>');
             $.each(response, function(index, edital) {
-                $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome + '</td><td>' +
+                $('#bodyEditalTable').append('<tr><td scope="row">' + edital.nome +
+                    '</td><td>' +
                     edital.ano + '</td><td><input type="radio" name="pai_id" value="' +
                     edital.id + '"></td><br></tr>');
             });

@@ -31,6 +31,7 @@ class EditalService extends EditalClass{
 
     public function salvar($data)
     {   
+
         $arquivo_nome = $this->formata($data['nome']) . '_' . $data['ano'] .'.pdf';
 
         $verificacao_arquivo = $this->verificaArquivo($data->file('arquivo'), $arquivo_nome);
@@ -276,13 +277,20 @@ class EditalService extends EditalClass{
 
     public function filtrar($instituicao_id, $ano, $tipo_id)
     {
-        $editaisFiltrados = Edital::where('instituicao_id', '=', $instituicao_id)
+        // $anos = Edital::select('ano')
+        // ->groupBy('ano')
+        // ->orderBy('ano', 'asc')
+
+        $editais_filtrados = Edital::where('instituicao_id', '=', $instituicao_id)
                                   ->where('ano','=',$ano)
                                   ->where('tipo_id','=',$tipo_id)
+                                  ->groupBy('id', 'created_at')
+                                  ->orderBy('created_at', 'asc')
                                   ->select('*')
                                   ->get();
 
-        return $editaisFiltrados;
+
+        return $editais_filtrados;
     }
 
     //retorna o maior ano de um vetor de anos recebidos

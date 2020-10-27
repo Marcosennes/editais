@@ -1,9 +1,45 @@
+html {
+    height: 100%;
+    margin-left: 0px;
+}
+
+body {
+    background-color: #fbf4f9;
+    height: 100%;
+}
+
+#header-cadastrar {
+    padding: 0px;
+}
+
+#div-principal {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.navbar {
+    background-color: #eee1e1;
+}
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    color: black;
+}
+
+#button_logout {
+    width: 6rem;
+    margin-right: 60px;
+}
+
 #card {
     border-radius: 10px;
+    margin-top: 30px;
 }
 
 #conteudo-card {
-    padding: 30px 60px;
+    /* padding: 30px 60px; */
     /* border: 10px white solid; */
     border-radius: 10px;
     background-color: white;
@@ -13,18 +49,39 @@
     background-color: white;
 }
 
-body {
-    background-color: #fbf4f9;
-}
-
 .card-body {
     text-align: left !important;
 }
 
-#coluna-principal {
-    padding: 50px;
-}
-
 #coluna-principal h1 {
     font-size: 2.2em;
+}
+
+.tableFixHead {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px 16px;
+}
+
+th {
+    background: #fff;
 }

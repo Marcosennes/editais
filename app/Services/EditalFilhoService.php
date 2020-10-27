@@ -92,7 +92,7 @@ class EditalFilhoService extends EditalClass{
         $this->repository->delete($anexo_id);
 
         return [
-            'validacao' => 'true',
+            'validacao' => true,
             'mensagem'  => "Anexo excluído",
         ];
     }
@@ -102,6 +102,8 @@ class EditalFilhoService extends EditalClass{
         $anexos_excluidos = EditalFilho::onlyTrashed()
                                        ->join('editals', 'editals.id', '=', 'edital_filhos.pai_id')
                                        ->select('edital_filhos.id', 'edital_filhos.nome', 'ano', 'editals.nome AS nome_pai', 'edital_filhos.deleted_at')
+                                       ->orderBy('edital_filhos.pai_id', 'asc')
+                                       ->orderBy('edital_filhos.created_at', 'asc')
                                        ->get();
 
         return $anexos_excluidos;
@@ -129,14 +131,14 @@ class EditalFilhoService extends EditalClass{
                        ->restore();
 
             return [
-                'validacao' => 'true',
+                'validacao' => true,
                 'mensagem'  => "O anexo foi restaurado",
             ];
 
         }else{
             //O edital está excluído
             return [
-                'validacao' => 'false',
+                'validacao' => false,
                 'mensagem'  => "O anexo não pode ser restaurado pois o edital dono deste está excluído.",
             ];
         }
@@ -151,6 +153,8 @@ class EditalFilhoService extends EditalClass{
                                          ->where('instituicao_id', '=', $instituicao_id)
                                          ->where('ano','=',$ano)
                                          ->where('tipo_id','=',$tipo_id)
+                                         ->orderBy('edital_filhos.pai_id', 'asc')
+                                         ->orderBy('edital_filhos.created_at', 'asc')
                                          ->select('edital_filhos.id', 'edital_filhos.nome', 'ano', 'editals.nome AS nome_pai')
                                          ->get();
         return $anexosFiltrados;
