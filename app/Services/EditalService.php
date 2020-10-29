@@ -94,38 +94,44 @@ class EditalService extends EditalClass{
 
     public function excluir($edital_id)
     {
-        $possui_anexo = EditalFilho::where('pai_id', '=', $edital_id)
-                                    ->select('id')
-                                    ->get();
-        
-        if(is_null($possui_anexo) || $possui_anexo->count() == 0)
+        if(isset($edital_id))
         {
-            $this->repository->delete($edital_id);
+            $possui_anexo = EditalFilho::where('pai_id', '=', $edital_id)
+            ->select('id')
+            ->get();
 
-            return [
-                'validacao' => 'true',
-                'mensagem'  => "Edital excluído",
-            ];
-        }    
-        else
-        {
-            foreach($possui_anexo as $anexo)
+            if(is_null($possui_anexo) || $possui_anexo->count() == 0)
             {
+                $this->repository->delete($edital_id);
+                return [
+                    'validacao' => true,
+                    'mensagem'  => "Edital excluído",
+                ];
+            }    
+            else
+            {
+                foreach($possui_anexo as $anexo)
+                {
                 $this->anexo_repository->delete($anexo["id"]);
+                }
+                $this->repository->delete($edital_id);
+                return [
+                    'validacao' => true,
+                    'mensagem'  => "Edital e anexos excluídos",
+                ];
             }
 
-            $this->repository->delete($edital_id);
-
             return [
-                'validacao' => 'true',
-                'mensagem'  => "Edital e anexos excluídos",
-            ];
-        }
-
-        return [
-            'validacao' => 'false',
+            'validacao' => false,
             'mensagem'  => "O Edital não foi excluído",
-        ];
+            ];
+        }else
+        {
+            return [
+                'validacao' => false,
+                'mensagem'  => "Selecione um edital.",
+                ];
+        }
     }
 
     public function editaisExcluidos(){
@@ -137,30 +143,40 @@ class EditalService extends EditalClass{
 
     public function restaurar($edital_id)
     {
-        Edital::onlyTrashed()->where('id', $edital_id)->restore();
-        $verifica_anexo = EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->get();
-
-        if(is_null($verifica_anexo) || $verifica_anexo->count() == 0)
+        if(isset($edital_id))
         {
+            Edital::onlyTrashed()->where('id', $edital_id)->restore();
+            $verifica_anexo = EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->get();
+    
+            if(is_null($verifica_anexo) || $verifica_anexo->count() == 0)
+            {
+                return [
+                    'validacao' => true,
+                    'mensagem'  => "O Edital foi restaurado.",
+                ]; 
+            }
+            else
+            {
+                EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->restore();
+    
+                return [
+                    'validacao' => true,
+                    'mensagem'  => "O Edital e os anexos relacionados foram restaurados.",
+                ];   
+            }
+    
             return [
-                'validacao' => 'true',
-                'mensagem'  => "O Edital foi restaurado.",
-            ]; 
+                'validacao' => false,
+                'mensagem'  => "O Edital não foi restaurado",
+            ];
         }
         else
         {
-            EditalFilho::onlyTrashed()->where('pai_id', $edital_id)->restore();
-
             return [
-                'validacao' => 'true',
-                'mensagem'  => "O Edital e os anexos relacionados foram restaurados.",
-            ];   
+                'validacao' => false,
+                'mensagem'  => "Selecione um edital.",
+            ];
         }
-
-        return [
-            'validacao' => 'false',
-            'mensagem'  => "O Edital não foi restaurado",
-        ];
     }
     //retorna os anexos de um edital
     public function anexos($instituicao_id, $ano, $tipo_id) 

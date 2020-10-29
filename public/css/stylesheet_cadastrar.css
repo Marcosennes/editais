@@ -17,15 +17,42 @@ body {
     padding-right: 0px;
 }
 
-.navbar {
-    background-color: #eee1e1;
+#div-principal-anexo {
+    padding: 0px;
+}
+
+#section-anexo {
+    height: 100%;
+}
+
+#container-anexo {
+    height: 100%;
+}
+
+#navbar-header {
+    /* background-color: #eee1e1; */
+    background-color: #c4170c;
+}
+
+#navbar-header a {
+    color: white;
 }
 
 .not-active {
     pointer-events: none;
     cursor: default;
     text-decoration: none;
-    color: black;
+}
+
+#fundo-logo-prefeitura {
+    background-color: white;
+    border-radius: 2px;
+    width: 210px;
+    height: 41px;
+}
+
+.text-center .img-responsive {
+    margin: 0 auto;
 }
 
 #button_logout {
@@ -36,6 +63,7 @@ body {
 #card {
     border-radius: 10px;
     margin-top: 30px;
+    height: 100%;
 }
 
 #conteudo-card {
@@ -51,6 +79,10 @@ body {
 
 .card-body {
     text-align: left !important;
+}
+
+#coluna-principal {
+    margin: 0px 20px 0px 20px;
 }
 
 #coluna-principal h1 {

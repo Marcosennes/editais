@@ -26,29 +26,36 @@
 </head>
 
 <body>
-    <section class="sectionmain" id="view-conteudo">
-        <?php session_start(); ?>
-        <script>
-        var instituicoes = <?php echo $instituicoes; ?>;
-        var anos = <?php echo $anos; ?>;
-        <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
-        var tipos = <?php echo $tipos; ?>;
-        var anexos_excluidos = <?php echo $anexos_excluidos; ?>;
-        </script>
-            <header>
-                <nav class="navbar navbar-expand">
-                    <a class="navbar-brand not-active" style="margin-left: 230px;" href="#">Admin</a>
-                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <div class="navbar-nav">
-                            <a class="nav-item nav-link active" href="/cadastrar">Editais</a>
-                            <a class="nav-item nav-link not-active" href="/cadastrar_anexo">Anexos</a>
-                            <a class="nav-item nav-link" style="margin-left: 590px;" href="/logout">Sair</a>
-                        </div>
+    <header id="header-cadastrar" class="col-12">
+        <nav id="navbar-header" class="navbar navbar-expand">
+            <div class="offset-1 col-10 offset-md-2 col-md-8 row container-fluid">
+                <div id="fundo-logo-prefeitura" class="text-center">
+                    <figure>
+                        <img id="logo-prefeitura" class="img-responsive" src="images/logo-prefeitura.png" alt="Prefeitura de Maricá"
+                            title="Prefeitura de Maricá" width="137;" height="39;">
+                    </figure>
+                </div>
+                <div class="collapse navbar-collapse container-fluid" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link active" href="/cadastrar">Editais</a>
+                        <a class="nav-item nav-link not-active" href="/cadastrar_anexo">Anexos</a>
                     </div>
-                </nav>
-            </header>
-        <div class="offset-lg-2 col-12 col-md-12 col-lg-8">
-            <div class="container">
+                    <a class="nav-item nav-link" href="/logout">Sair</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div id="div-principal-anexo" class="offset-md-2 col-12 col-md-8">
+        <section id="section-anexo" class="sectionmain" id="view-conteudo">
+            <?php session_start(); ?>
+            <script>
+            var instituicoes = <?php echo $instituicoes; ?>;
+            var anos = <?php echo $anos; ?>;
+            <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
+            var tipos = <?php echo $tipos; ?>;
+            var anexos_excluidos = <?php echo $anexos_excluidos; ?>;
+            </script>
+            <div id="container-anexo" class="container">
                 <div id="coluna-principal" class="row d-flex flex-column">
                     <?php 
                         if(isset($_SESSION['cadastro_anexo'])){
@@ -84,7 +91,7 @@
                         }
                     ?>
                     <div id="card">
-                        <div id="conteudo-card">
+                        <div id="conteudo-card" class="offset-md-1 col-md-10">
                             <div class="card text-center">
                                 <div class="card-header">
                                     <ul class="nav nav-tabs card-header-tabs">
@@ -236,7 +243,7 @@
                                                 </div>
                                             </div>
                                             <button class="btn btn-danger"
-                                                style="width: 100%; margin-top: 11px; margin-bottom: 20px;"
+                                                style="width: 100%; margin-top: 25px; margin-bottom: 20px;"
                                                 type="submit">Excluir</button>
                                         </div>
                                     </form>
@@ -291,8 +298,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 </body>
 <script type="text/javascript">
 $('form[name="formFiltraAnexo"]').submit(function(event) {

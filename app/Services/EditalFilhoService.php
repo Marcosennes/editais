@@ -89,12 +89,21 @@ class EditalFilhoService extends EditalClass{
 
     public function excluir($anexo_id)
     {
-        $this->repository->delete($anexo_id);
+        if(isset($anexo_id))
+        {
+            $this->repository->delete($anexo_id);
 
-        return [
-            'validacao' => true,
-            'mensagem'  => "Anexo excluído",
-        ];
+            return [
+                'validacao' => true,
+                'mensagem'  => "Anexo excluído",
+            ];
+        }else
+        {
+            return [
+                'validacao' => false,
+                'mensagem'  => "Selecione um anexo.",
+            ];
+        }
     }
 
     public function anexosExcluidos()
@@ -111,39 +120,48 @@ class EditalFilhoService extends EditalClass{
 
     public function restaurar($anexo_id)
     {
-        // $anexo_a_ser_restaurado = EditalFilho::onlyTrashed()->where('id', $anexo_id)->get();
-
-        $pai_id = EditalFilho::withTrashed()
-                             ->where('id', '=', $anexo_id)
-                             ->select('pai_id')   
-                             ->get();
-
-        $verifica_pai_excluido = Edital::onlyTrashed()
-                                       ->where('id', '=', $pai_id[0]['pai_id'])
-                                       ->select('*')
-                                       ->get();
-
-        if(is_null($verifica_pai_excluido) || $verifica_pai_excluido->count() == 0)
+        if(isset($anexo_id))
         {
-            //O edital não está excluído
-            EditalFilho::onlyTrashed()
-                       ->where('id', $anexo_id)
-                       ->restore();
+            // $anexo_a_ser_restaurado = EditalFilho::onlyTrashed()->where('id', $anexo_id)->get();
 
-            return [
-                'validacao' => true,
-                'mensagem'  => "O anexo foi restaurado",
-            ];
+            $pai_id = EditalFilho::withTrashed()
+            ->where('id', '=', $anexo_id)
+            ->select('pai_id')   
+            ->get();
 
-        }else{
+            $verifica_pai_excluido = Edital::onlyTrashed()
+                                           ->where('id', '=', $pai_id[0]['pai_id'])
+                                           ->select('*')
+                                           ->get();
+
+            if(is_null($verifica_pai_excluido) || $verifica_pai_excluido->count() == 0)
+            {
+                //O edital não está excluído
+                EditalFilho::onlyTrashed()
+                        ->where('id', $anexo_id)
+                        ->restore();
+
+                return [
+                    'validacao' => true,
+                    'mensagem'  => "O anexo foi restaurado",
+                ];
+
+            }else{
+
             //O edital está excluído
+                return [
+                    'validacao' => false,
+                    'mensagem'  => "O anexo não pode ser restaurado pois o edital dono deste está excluído.",
+                ];
+            }
+            // dd($anexo_id, $pai_id[0]['pai_id'], $verifica_pai_deletado[0]['deleted_at']);
+        }
+        else{
             return [
                 'validacao' => false,
-                'mensagem'  => "O anexo não pode ser restaurado pois o edital dono deste está excluído.",
+                'mensagem'  => "Selecione um anexo.",
             ];
         }
-        // dd($anexo_id, $pai_id[0]['pai_id'], $verifica_pai_deletado[0]['deleted_at']);
-
     }
 
     public function filtrarAnexo($instituicao_id, $ano, $tipo_id)
