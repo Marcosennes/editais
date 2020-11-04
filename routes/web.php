@@ -35,10 +35,8 @@ Route::group(['middleware' => 'autenticar.login'], function() {
     Route::post('/filtrarEdital',       ['uses' => 'EditalsController@filtrarEdital',       'as' => 'edital.filtrarEdital']);
     Route::post('/filtrarAnexo',        ['uses' => 'EditalFilhosController@filtrarAnexo',   'as' => 'editalFilhos.filtrarAnexo']);
 
-    /*
     //Rota para registrar novo usuário com privilégios. Se desativada a inserção de novos usuários deve ser realizada direto do banco de dados
-    Route::post('/registra',            ['uses' => 'UsersController@registrar',         'as' =>'login.registrar']);
-    */
+    Route::post('/registrar',            ['uses' => 'UsersController@registrar',         'as' =>'login.registrar']);
 
     //Rota para deslogar usuário
     Route::get('/logout', function(){

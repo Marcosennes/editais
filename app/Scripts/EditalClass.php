@@ -25,7 +25,7 @@ abstract class EditalClass{
         }
 
         /* 
-        Se quiser limitar o tamanho dos arquivo, basta colocar o tamanho máximo 
+        Se quiser limitar o tamanho dos arquivos, basta colocar o tamanho máximo 
         em bytes. Zero é ilimitado
         */
         $limitar_tamanho = 0;

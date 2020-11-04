@@ -26,21 +26,39 @@
 </head>
 
 <body>
+    <script>
+    var instituicoes = <?php echo $instituicoes; ?>;
+    var anos = <?php echo $anos; ?>;
+    <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
+    var tipos = <?php echo $tipos; ?>;
+    var editais_excluidos = <?php echo $editais_excluidos; ?>;
+    var permissao_array = <?php echo $permissao; ?>;
+    var permissao = permissao_array[0].permission;
+    </script>
     <header id="header-cadastrar" class="col-12">
         <nav id="navbar-header" class="navbar navbar-expand">
-            <div class="offset-1 col-10 offset-md-2 col-md-8 row container-fluid">
+            <div class="row container-fluid" style="margin-left: 10px;">
                 <div id="fundo-logo-prefeitura" class="text-center">
                     <figure>
                         <img id="logo-prefeitura" class="img-responsive" src="images/logo-prefeitura.png"
                             alt="Prefeitura de Maricá" title="Prefeitura de Maricá" width="137;" height="39;">
                     </figure>
                 </div>
-                <div class="collapse navbar-collapse container-fluid" id="navbarNavAltMarkup">
+                <div id="navbar-list" class="collapse navbar-collapse container-fluid" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-item nav-link not-active" href="/cadastrar">Editais</a>
+                        <a id="editais-a" class="nav-item nav-link not-active" href="/cadastrar">Editais</a>
                         <a class="nav-item nav-link active" href="/cadastrar_anexo">Anexos</a>
+                        <script>
+                        if (permissao == "admin") {
+                            $('.navbar-nav').append(
+                                '<a id="novo-usuario" class="nav-item nav-link" href="">Registrar Usuário</a>'
+                            )
+                        }
+                        </script>
                     </div>
-                    <a class="nav-item nav-link" href="/logout">Sair</a>
+                    <a class="nav-item nav-link" href="/logout">
+                        <i class="fa fa-sign-out" aria-hidden="true" title="Sair"></i>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -50,13 +68,6 @@
             <?php
             session_start();
             ?>
-            <script>
-            var instituicoes = <?php echo $instituicoes; ?>;
-            var anos = <?php echo $anos; ?>;
-            <?php $array_js = json_encode($anos_tipos_instituicoes); echo "var anos_tipos_instituicoes = " . $array_js . ";\n"; ?>
-            var tipos = <?php echo $tipos; ?>;
-            var editais_excluidos = <?php echo $editais_excluidos; ?>;
-            </script>
             <div class="container">
                 <div id="coluna-principal" class="row d-flex flex-column">
                     <!-- <a id="excluir-edital" href="" class="align-self-end">Excluir Edital</a> -->
@@ -91,11 +102,22 @@
                         
                         unset($_SESSION['restauracao_edital']);
                     }
+
+                    if(isset($_SESSION['registrar_usuario'])){
+                        if($_SESSION['registrar_usuario']['validacao'] == true){
+                            echo '<div class="alert alert-success" style="margin-top : 20px;" role="alert">' . $_SESSION['registrar_usuario']['mensagem'] . '</div>';
+                        }
+                        elseif($_SESSION['registrar_usuario']['validacao'] == false){
+                            echo '<div class="alert alert-danger" style="margin-top : 20px;" role="alert">' . $_SESSION['registrar_usuario']['mensagem'] . '</div>';
+                        }
+                        
+                        unset($_SESSION['registrar_usuario']);
+                    }
                 ?>
                     <div id="card">
                         <div id="conteudo-card" class="offset-md-1 col-md-10">
-                            <div class="card text-center">
-                                <div class="card-header">
+                            <div id="card-content" class="card text-center">
+                                <div id="card-header-edital" class="card-header">
                                     <ul class="nav nav-tabs card-header-tabs">
                                         <li class="nav-item">
                                             <a id="cadastrar-aba" class="nav-link active" href="#">Cadastrar</a>
@@ -110,6 +132,9 @@
                                             <a id="relatorio-aba" class="nav-link" href="#">Relatório</a>
                                         </li>
                                     </ul>
+                                </div>
+                                <div id="card-header-usuario">
+                                    <h1>Registrar novo usuário</h1>
                                 </div>
                                 <div id="cadastrar-body" class="card-body">
                                     <form method="post" action="/salva_edital" enctype="multipart/form-data">
@@ -263,8 +288,56 @@
                                             type="submit">Restaurar</button>
                                     </form>
                                 </div>
+                                <div id="registrar-usuario">
+                                    <form id="registrar-form" action="/registrar" method="post">
+                                        <?php echo csrf_field(); ?>
+                                        <label for="name">Nome:</label>
+                                        <input id="nome-input" type="text" class="form-control" name="name">
+                                        <div style="display: none" id="nome_cadastro_vazio">
+                                            <span style="color: red;">Preencha o nome</span>
+                                        </div>
+                                        <label for="cpf">CPF:</label>
+                                        <input id="cpf-input" type="text" onkeypress="return onlynumber();" class="form-control"
+                                            name="cpf" maxlength="11">
+                                        <label for="email">Email:</label>
+                                        <input id="email-input" type="email" class="form-control" name="email">
+                                        <div style="display: none" id="email_cadastro_vazio">
+                                            <span style="color: red;">Preencha o E-mail</span>
+                                        </div>
+                                        <label for="password">Senha:</label>
+                                        <input id="senha-input" type="password" class="form-control" name="password">
+                                        <label for="confirmed-password">Confirme sua
+                                            Senha:</label>
+                                        <input id="confirma-senha-input" type="password" style="margin-bottom: 20px;"
+                                            class="form-control" name="confirmed-password">
+                                        <div style="display: none" id="password_cadastro_vazia">
+                                            <span style="color: red;">A senha deve possuir pelo menos 5
+                                                caracteres</span>
+                                        </div>
+                                        <div style="display: none" id="password_confirm_cadastro_vazia">
+                                            <span style="color: red;">Preencha a senha</span>
+                                        </div>
+                                        <div style="display: none" id="senhas_diferentes">
+                                            <span style="color: red;">As senhas informadas não correspondem</span>
+                                        </div>
+                                        <div id="admin-button">
+                                            <label for="permission">Usuário
+                                                administrador?</label>
+                                            <select name="permission" id="permissao">
+                                                <option value="admin">Sim</option>
+                                                <option value="user" selected="selected">Não</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <button class="btn btn-info"
+                                            style="width: 100%; margin-top: 25px; margin-bottom: 20px;"
+                                            onclick="return validaFormRegistrar()"
+                                            type="submit">Registrar</button>
+                                    </form>
+
+                                </div>
                                 <div id="relatorio-body" class="card-body" style="display: none;">
-                                    <p>aaaa</p>
+                                    <p>Relatório</p>
                                 </div>
                             </div>
                         </div>
@@ -404,6 +477,65 @@ $('#excluir-edital').click(function(event) {
 </script> -->
 
 <script>
+    function validaFormRegistrar() {
+        var oCadastrar = {
+
+            nome_cadastro: $('#nome-input').val(),
+            cpf_cadastro: $('#cpf-input').val(),
+            email_cadastro: $('#email-input').val(),
+            password_cadastro: $('#senha-input').val(),
+            password_confirmacao_cadastro: $('#confirma-senha-input').val(),
+            permissao: $('#permissao').val(),
+        }
+
+        $('#nome_cadastro_vazio').hide();
+        $('#email_cadastro_vazio').hide();
+        $('#email_ja_cadastrado').hide();
+        $('#password_cadastro_vazia').hide();
+        $('#password_confirm_cadastro_vazia').hide();
+        $('#senhas_diferentes').hide();
+
+        if (oCadastrar.nome_cadastro == '' || oCadastrar.email_cadastro == '' || oCadastrar.password_cadastro.length < 5 ||
+            oCadastrar.password_cadastro == "" || oCadastrar.password_confirmacao_cadastro == "" ||
+            oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
+            if (oCadastrar.nome_cadastro == "") {
+                $('#nome_cadastro_vazio').show();
+                $('#usernamesignup').focus();
+            }
+            if (oCadastrar.email_cadastro == "") {
+                $('#email_cadastro_vazio').show();
+                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro == "") {
+                    $('#emailsignup').focus();
+                }
+            }
+            if (oCadastrar.password_cadastro.length < 5) {
+                $('#password_cadastro_vazia').show();
+                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && oCadastrar
+                    .password_cadastro == "") {
+                    $('#passwordsignup').focus();
+                }
+            }
+            if (oCadastrar.password_confirmacao_cadastro.length < 5) {
+                $('#password_confirm_cadastro_vazia').show();
+                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && (oCadastrar
+                        .password_cadastro != "" || oCadastrar.password_cadastro.length >= 5) &&
+                    oCadastrar.password_confirmacao_cadastro == "") {
+                    $('#passwordsignup_confirm').focus();
+                }
+            }
+            if (oCadastrar.password_cadastro != "" && oCadastrar.password_confirmacao_cadastro != "" &&
+                oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
+                $('#senhas_diferentes').show();
+            }
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>
+
+<script>
 $('#excluir-aba').on('click', function(event) {
     event.preventDefault()
     $('#cadastrar-aba').removeClass('active')
@@ -448,6 +580,22 @@ $('#relatorio-aba').on('click', function(event) {
     $('#excluir-body').hide()
     $('#lixeira-body').hide()
     $('#relatorio-body').show()
+})
+
+$('#novo-usuario').on('click', function(event) {
+    event.preventDefault()
+    $('#novo-usuario').removeClass('active')
+    $('#novo-usuario').addClass('not-active')
+    $('#editais-a').removeClass('not-active')
+    $('#editais-a').addClass('active')
+    $('#card-header-edital').hide()
+    $('#cadastrar-body').hide()
+    $('#excluir-body').hide()
+    $('#lixeira-body').hide()
+    $('#relatorio-body').hide()
+    $('#card-header-usuario').show()
+    $('#registrar-usuario').show()
+
 })
 </script>
 

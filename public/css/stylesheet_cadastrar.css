@@ -60,6 +60,16 @@ body {
     margin-right: 60px;
 }
 
+#card-header-usuario {
+    background-color: #fbf4f9;
+    display: none;
+}
+
+#card-header-usuario h1 {
+    padding: 20px;
+    font-size: 5px;
+}
+
 #card {
     border-radius: 10px;
     margin-top: 30px;
@@ -116,4 +126,29 @@ td {
 
 th {
     background: #fff;
+}
+
+#registrar-usuario {
+    padding: 20px;
+    display: none;
+}
+
+#registrar-usuario label {
+    float: left;
+    margin-top: 10px;
+}
+
+#admin-button {
+    background-color: #fbf4f9;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#admin-button label {
+    font-size: 21px;
+}
+
+#admin-button button {
+    width: 100%;
+    margin-bottom: 20px;
 }

@@ -7,6 +7,7 @@ use App\Entities\EditalFilho;
 use App\Entities\EditalTipo;
 use App\Http\Requests\editalCreateRequest;
 use App\Repositories\EditalRepository;
+use App\Repositories\UserRepository;
 use App\Services\EditalService;
 use App\Services\EditalFilhoService;
 use Illuminate\Http\Request;
@@ -17,11 +18,12 @@ class EditalsController extends Controller
     protected $repository;
     protected $service;
 
-    public function __construct(EditalRepository $repository, EditalService $service, EditalFilhoService $anexo_service)
+    public function __construct(EditalRepository $repository, EditalService $service, EditalFilhoService $anexo_service, UserRepository $user_repository)
     {
         $this->repository       = $repository;
         $this->service          = $service;
         $this->anexo_service    = $anexo_service;
+        $this->user_repository  = $user_repository;
     }
 
     public function index()
@@ -59,6 +61,7 @@ class EditalsController extends Controller
         $anos_tipos_instituicoes            = array();
         $tipos                              = $this->service->tipos();
         $editais_excluidos                  = $this->service->editaisExcluidos();
+        $permissao_usuario                  = $this->user_repository->where('id', '=', Auth::id())->select('permission')->get();
 
         for($i = 0; $i < sizeof($instituicoes); $i++){
             $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
@@ -70,6 +73,7 @@ class EditalsController extends Controller
             'tipos'                     => $tipos,
             'instituicoes'              => $instituicoes,
             'editais_excluidos'         => $editais_excluidos,
+            'permissao'                 => $permissao_usuario,
         ]);
     }
 
@@ -80,6 +84,7 @@ class EditalsController extends Controller
         $anos_tipos_instituicoes            = array();
         $tipos                              = $this->service->tipos();
         $anexos_excluidos                   = $this->anexo_service->anexosExcluidos();
+        $permissao_usuario                  = $this->user_repository->where('id', '=', Auth::id())->select('permission')->get();
 
         for($i = 0; $i < sizeof($instituicoes); $i++){
             $anos_tipos_instituicoes[$i]    = $this->service->ordenaAnoTipoPorInstituicao($instituicoes[$i]->id);
@@ -91,6 +96,7 @@ class EditalsController extends Controller
             'tipos'                     => $tipos,
             'instituicoes'              => $instituicoes,
             'anexos_excluidos'          => $anexos_excluidos,
+            'permissao'                 => $permissao_usuario,
         ]);
     }
 

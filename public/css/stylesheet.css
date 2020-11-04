@@ -43,6 +43,11 @@ body {
     margin-top: -85px;
 }
 
+#entrar {
+    float: right;
+    background-color: #c4170c;
+}
+
 
 /*
 * ================================================================

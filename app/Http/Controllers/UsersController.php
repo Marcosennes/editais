@@ -26,10 +26,9 @@ class UsersController extends Controller
         return view('login.login');
     }
 
-    /*
     public function registrar(UserCreateRequest $request)
     {
-        //dd($request->all(), $data);
+        session_start();
 
         $aux_data = 
         [
@@ -37,7 +36,36 @@ class UsersController extends Controller
             'name'      => $request->get('name'),
             'email'     => $request->get('email'),
             'password'  => password_hash($request->get('password'), PASSWORD_DEFAULT),
+            'permission' => $request->get('permission'),
         ];
+        if(empty($aux_data['cpf'])){
+            
+            $_SESSION['registrar_usuario']['validacao']  = false;
+            $_SESSION['registrar_usuario']['mensagem']   = "CPF não pode ser vazio";
+            
+            return redirect()->route('edital.cadastrar');   
+        }
+        if(empty($aux_data['name'])){
+            
+            $_SESSION['registrar_usuario']['validacao']  = false;
+            $_SESSION['registrar_usuario']['mensagem']   = "Nome não pode ser vazio";
+            
+            return redirect()->route('edital.cadastrar');   
+        }
+        if(empty($aux_data['email'])){
+            
+            $_SESSION['registrar_usuario']['validacao']  = false;
+            $_SESSION['registrar_usuario']['mensagem']   = "Email não pode ser vazio";
+            
+            return redirect()->route('edital.cadastrar');   
+        }
+        if(empty($aux_data['password'])){
+            
+            $_SESSION['registrar_usuario']['validacao']  = false;
+            $_SESSION['registrar_usuario']['mensagem']   = "Senha não pode ser vazia";
+            
+            return redirect()->route('edital.cadastrar');   
+        }
 
         // Dessa forma se a busca retornar sem nenhum usuário com o mesmo email, o resultado não é null
         // 
@@ -45,11 +73,8 @@ class UsersController extends Controller
         //       ->where('email', '=', $data['email'])
         //       ->select('id')
         //       ->get();
-
         $email_verification = $this->repository->findWhere(['email' => $request->get('email')])->first();
         $cpf_verification   = $this->repository->findWhere(['cpf'   => $request->get('cpf')])->first();
-
-        session_start();
 
         try
         {
@@ -57,15 +82,13 @@ class UsersController extends Controller
             {
                 $_SESSION['registrar_usuario']['validacao']  = false;
                 $_SESSION['registrar_usuario']['mensagem']   = "Email já cadastrado no sistema";
-
-                return redirect()->route('login.loginPage');
+                return redirect()->route('edital.cadastrar');
             }
             else if($cpf_verification)
             {
                 $_SESSION['registrar_usuario']['validacao']  = false;
                 $_SESSION['registrar_usuario']['mensagem']   = "CPF já cadastrado no sistema";
-
-                return redirect()->route('login.loginPage');
+                return redirect()->route('edital.cadastrar');
             }
             else
             {
@@ -74,9 +97,7 @@ class UsersController extends Controller
     
                 $_SESSION['registrar_usuario']['validacao']  = true;
                 $_SESSION['registrar_usuario']['mensagem']   = "Usuário cadastrado";
-
                 $user = $this->repository->findWhere(['email' => $request->get('email')])->first();
-                Auth::login($user);
                 
                 return redirect()->route('edital.cadastrar');
             }
@@ -91,7 +112,7 @@ class UsersController extends Controller
             }
         }        // $usuario = $request['success'] ? $request['data'] : null; 
     }
-    */
+    
     public function autenticar(Request $request)
     {
         session_start();
