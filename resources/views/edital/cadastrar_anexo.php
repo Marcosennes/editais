@@ -318,6 +318,9 @@
                                         <label for="cpf">CPF:</label>
                                         <input id="cpf-input" type="text" onkeypress="return onlynumber();"
                                             class="form-control" name="cpf" maxlength="11">
+                                        <div style="display: none" id="cpf_cadastro_vazio">
+                                            <span style="color: red;">Preencha o CPF</span>
+                                        </div>
                                         <label for="email">Email:</label>
                                         <input id="email-input" type="email" class="form-control" name="email">
                                         <div style="display: none" id="email_cadastro_vazio">
@@ -532,49 +535,54 @@ $('#novo-usuario').on('click', function(event) {
         }
 
         $('#nome_cadastro_vazio').hide();
+        $('#cpf_cadastro_vazio').hide();
         $('#email_cadastro_vazio').hide();
         $('#email_ja_cadastrado').hide();
         $('#password_cadastro_vazia').hide();
         $('#password_confirm_cadastro_vazia').hide();
         $('#senhas_diferentes').hide();
 
-        if (oCadastrar.nome_cadastro == '' || oCadastrar.email_cadastro == '' || oCadastrar.password_cadastro.length < 5 ||
-            oCadastrar.password_cadastro == "" || oCadastrar.password_confirmacao_cadastro == "" ||
-            oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
-            if (oCadastrar.nome_cadastro == "") {
-                $('#nome_cadastro_vazio').show();
-                $('#usernamesignup').focus();
-            }
-            if (oCadastrar.email_cadastro == "") {
-                $('#email_cadastro_vazio').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro == "") {
-                    $('#emailsignup').focus();
-                }
-            }
-            if (oCadastrar.password_cadastro.length < 5) {
-                $('#password_cadastro_vazia').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && oCadastrar
-                    .password_cadastro == "") {
-                    $('#passwordsignup').focus();
-                }
-            }
-            if (oCadastrar.password_confirmacao_cadastro.length < 5) {
-                $('#password_confirm_cadastro_vazia').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && (oCadastrar
-                        .password_cadastro != "" || oCadastrar.password_cadastro.length >= 5) &&
-                    oCadastrar.password_confirmacao_cadastro == "") {
-                    $('#passwordsignup_confirm').focus();
-                }
-            }
-            if (oCadastrar.password_cadastro != "" && oCadastrar.password_confirmacao_cadastro != "" &&
-                oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
-                $('#senhas_diferentes').show();
-            }
-
+        if (oCadastrar.nome_cadastro == "") {
+            $('#nome_cadastro_vazio').show();
+            $('#nome-input').focus();
             return false;
-        } else {
-            return true;
         }
+        if (oCadastrar.cpf_cadastro == "") {
+            $('#cpf_cadastro_vazio').show();
+            if(oCadastrar.nome_cadastro != ""){
+                $('#cpf-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.email_cadastro == "") {
+            $('#email_cadastro_vazio').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "") {
+                $('#email-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_cadastro.length < 5) {
+            $('#password_cadastro_vazia').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "" && oCadastrar.email_cadastro != "") {
+                $('#password-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_confirmacao_cadastro.length < 5) {
+            $('#password_confirm_cadastro_vazia').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "" && oCadastrar.email_cadastro != "" && (oCadastrar
+                    .password_cadastro != "" || oCadastrar.password_cadastro.length >= 5)) {
+                $('#confirma-senha-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_cadastro != "" && oCadastrar.password_confirmacao_cadastro != "" &&
+            oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
+            $('#senhas_diferentes').show();
+            return false;
+        }
+        
+        return true;
     }
 </script>
 

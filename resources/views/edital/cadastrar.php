@@ -299,6 +299,9 @@
                                         <label for="cpf">CPF:</label>
                                         <input id="cpf-input" type="text" onkeypress="return onlynumber();" class="form-control"
                                             name="cpf" maxlength="11">
+                                        <div style="display: none" id="cpf_cadastro_vazio">
+                                            <span style="color: red;">Preencha o CPF</span>
+                                        </div>
                                         <label for="email">Email:</label>
                                         <input id="email-input" type="email" class="form-control" name="email">
                                         <div style="display: none" id="email_cadastro_vazio">
@@ -321,8 +324,7 @@
                                             <span style="color: red;">As senhas informadas não correspondem</span>
                                         </div>
                                         <div id="admin-button">
-                                            <label for="permission">Usuário
-                                                administrador?</label>
+                                            <label for="permission">Usuário administrador?</label>
                                             <select name="permission" id="permissao">
                                                 <option value="admin">Sim</option>
                                                 <option value="user" selected="selected">Não</option>
@@ -439,43 +441,6 @@ $('#ano_edital_select').click(function(event) {
     });
 });
 </script>
-
-<!-- <script>
-$('#excluir-edital').click(function(event) {
-    event.preventDefault()
-    $('#conteudo-card').remove()
-    $('#card').append('<div id="conteudo-card" class="conteudo-card">')
-    $('#conteudo-card').append('<form name="formFiltraAnexo">')
-    $('#conteudo-card').append('<?php echo csrf_field(); ?>')
-    $('#conteudo-card').append(
-        '<label for="instituicao">Instituição</label> <select id="instituicoes_anexo_select" name="instituicao_id" class="form-control">'
-    )
-    for (i = 0; i < instituicoes.length; i++) {
-        $('#instituicoes_anexo_select').append('<option value="' + instituicoes[i].id + '">' + instituicoes[i]
-            .nome + '</option>')
-    }
-    $('#conteudo-card').append(
-        '</select> <label for="ano">Ano</label> <select id="ano_anexo_select" name="ano" id="anexoAno" class="form-control">'
-    )
-    anos_instituicao_selecionada = anos_tipos_instituicoes[0];
-    for (var i = 0; i < anos_instituicao_selecionada.length; i++) {
-        $("#ano_anexo_select").append('<option value="' + anos_instituicao_selecionada[i].ano + '">' +
-            anos_instituicao_selecionada[i].ano + '</option>')
-    }
-    $('#conteudo-card').append(
-        '</select> <label for="tipo">Tipo</label> <select id="tipos_anexo_select" name="tipo" id="anexoTipo" class="form-control">'
-    )
-    for (i = 0; i < tipos.length; i++) {
-        $('#tipos_anexo_select').append('<option value="' + tipos[i].id + '">' + tipos[i].nome + '</option>')
-    }
-    $('#conteudo-card').append(
-        '</select> <button class="btn btn-primary" style="width: 100%; margin-top: 11px; margin-bottom: 20px;" type="submit">Filtrar</button>'
-    )
-    $('#conteudo-card').append('</form>')
-    $('#conteudo-card').append('</div>')
-})
-</script> -->
-
 <script>
     function validaFormRegistrar() {
         var oCadastrar = {
@@ -489,49 +454,54 @@ $('#excluir-edital').click(function(event) {
         }
 
         $('#nome_cadastro_vazio').hide();
+        $('#cpf_cadastro_vazio').hide();
         $('#email_cadastro_vazio').hide();
         $('#email_ja_cadastrado').hide();
         $('#password_cadastro_vazia').hide();
         $('#password_confirm_cadastro_vazia').hide();
         $('#senhas_diferentes').hide();
 
-        if (oCadastrar.nome_cadastro == '' || oCadastrar.email_cadastro == '' || oCadastrar.password_cadastro.length < 5 ||
-            oCadastrar.password_cadastro == "" || oCadastrar.password_confirmacao_cadastro == "" ||
-            oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
-            if (oCadastrar.nome_cadastro == "") {
-                $('#nome_cadastro_vazio').show();
-                $('#usernamesignup').focus();
-            }
-            if (oCadastrar.email_cadastro == "") {
-                $('#email_cadastro_vazio').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro == "") {
-                    $('#emailsignup').focus();
-                }
-            }
-            if (oCadastrar.password_cadastro.length < 5) {
-                $('#password_cadastro_vazia').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && oCadastrar
-                    .password_cadastro == "") {
-                    $('#passwordsignup').focus();
-                }
-            }
-            if (oCadastrar.password_confirmacao_cadastro.length < 5) {
-                $('#password_confirm_cadastro_vazia').show();
-                if (oCadastrar.nome_cadastro != "" && oCadastrar.email_cadastro != "" && (oCadastrar
-                        .password_cadastro != "" || oCadastrar.password_cadastro.length >= 5) &&
-                    oCadastrar.password_confirmacao_cadastro == "") {
-                    $('#passwordsignup_confirm').focus();
-                }
-            }
-            if (oCadastrar.password_cadastro != "" && oCadastrar.password_confirmacao_cadastro != "" &&
-                oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
-                $('#senhas_diferentes').show();
-            }
-
+        if (oCadastrar.nome_cadastro == "") {
+            $('#nome_cadastro_vazio').show();
+            $('#nome-input').focus();
             return false;
-        } else {
-            return true;
         }
+        if (oCadastrar.cpf_cadastro == "") {
+            $('#cpf_cadastro_vazio').show();
+            if(oCadastrar.nome_cadastro != ""){
+                $('#cpf-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.email_cadastro == "") {
+            $('#email_cadastro_vazio').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "") {
+                $('#email-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_cadastro.length < 5) {
+            $('#password_cadastro_vazia').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "" && oCadastrar.email_cadastro != "") {
+                $('#password-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_confirmacao_cadastro.length < 5) {
+            $('#password_confirm_cadastro_vazia').show();
+            if (oCadastrar.nome_cadastro != "" && oCadastrar.cpf_cadastro != "" && oCadastrar.email_cadastro != "" && (oCadastrar
+                    .password_cadastro != "" || oCadastrar.password_cadastro.length >= 5)) {
+                $('#confirma-senha-input').focus();
+            }
+            return false;
+        }
+        if (oCadastrar.password_cadastro != "" && oCadastrar.password_confirmacao_cadastro != "" &&
+            oCadastrar.password_cadastro != oCadastrar.password_confirmacao_cadastro) {
+            $('#senhas_diferentes').show();
+            return false;
+        }
+
+        return true;
     }
 </script>
 
