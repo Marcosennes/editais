@@ -1,0 +1,155 @@
+html {
+    height: 100%;
+    margin-left: 0px;
+}
+
+body {
+    background-color: #fbf4f9;
+    height: 100%;
+}
+
+#header-cadastrar {
+    padding: 0px;
+}
+
+#div-principal {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#div-principal-anexo {
+    padding: 0px;
+}
+
+#section-anexo {
+    height: 100%;
+}
+
+#container-anexo {
+    height: 100%;
+}
+
+#navbar-header {
+    /* background-color: #eee1e1; */
+    background-color: #c4170c;
+}
+
+#navbar-header a {
+    color: white;
+}
+
+.not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+}
+
+#fundo-logo-prefeitura {
+    background-color: white;
+    border-radius: 2px;
+    width: 210px;
+    height: 41px;
+}
+
+.text-center .img-responsive {
+    margin: 0 auto;
+}
+
+#button_logout {
+    width: 6rem;
+    margin-right: 60px;
+}
+
+#card-header-usuario {
+    background-color: #fbf4f9;
+    display: none;
+}
+
+#card-header-usuario h1 {
+    padding: 20px;
+    font-size: 5px;
+}
+
+#card {
+    border-radius: 10px;
+    margin-top: 30px;
+    height: 100%;
+}
+
+#conteudo-card {
+    /* padding: 30px 60px; */
+    /* border: 10px white solid; */
+    border-radius: 10px;
+    background-color: white;
+}
+
+.container {
+    background-color: white;
+}
+
+.card-body {
+    text-align: left !important;
+}
+
+#coluna-principal {
+    margin: 0px 20px 0px 20px;
+}
+
+#coluna-principal h1 {
+    font-size: 2.2em;
+}
+
+.tableFixHead {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px 16px;
+}
+
+th {
+    background: #fff;
+}
+
+#registrar-usuario {
+    padding: 20px;
+    display: none;
+}
+
+#registrar-usuario label {
+    float: left;
+    margin-top: 4px;
+}
+
+#admin-button {
+    background-color: #fbf4f9;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#admin-button label {
+    font-size: 21px;
+    margin-top: 0px;
+}
+
+#admin-button button {
+    width: 100%;
+    margin-bottom: 20px;
+}
